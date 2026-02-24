@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SOC Analyst - Prep Entretien Sopra Steria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-deep: #040810;
+      --bg-primary: #060d1a;
+      --bg-surface: #0b1525;
+      --bg-card: #0f1d32;
+      --bg-card-hover: #142844;
+      --accent-cyan: #00d4ff;
+      --accent-green: #39ff14;
+      --accent-amber: #ffaa00;
+      --accent-red: #ff3e3e;
+      --accent-purple: #a78bfa;
+      --text-primary: #e2e8f0;
+      --text-secondary: #8899aa;
+      --text-muted: #556677;
+      --border: #1a2d4a;
+      --border-glow: rgba(0, 212, 255, 0.15);
+      --font-display: 'Orbitron', monospace;
+      --font-body: 'Outfit', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --radius: 10px;
+      --radius-sm: 6px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,212,255,0.015) 2px, rgba(0,212,255,0.015) 4px),
+        radial-gradient(ellipse at 20% 50%, rgba(0,212,255,0.04) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 50%, rgba(167,139,250,0.03) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* === TOP BAR === */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 64px;
+      background: rgba(6,13,26,0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 100;
+    }
+    .topbar-brand {
+      font-family: var(--font-display);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+    }
+    .topbar-brand span { color: var(--text-muted); font-weight: 400; }
+    .topbar-timer {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--accent-amber);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .topbar-timer .dot {
+      width: 8px; height: 8px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--accent-green); }
+      50% { opacity: 0.4; box-shadow: none; }
+    }
+
+    /* === NAVIGATION === */
+    .nav-container {
+      position: fixed;
+      top: 64px; left: 0; right: 0;
+      height: 52px;
+      background: rgba(11,21,37,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      z-index: 99;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .nav-tabs {
+      display: flex;
+      height: 100%;
+      min-width: max-content;
+      padding: 0 16px;
+      gap: 2px;
+    }
+    .nav-tab {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: transparent;
+      border: none;
+      padding: 0 18px;
+      cursor: pointer;
+      position: relative;
+      white-space: nowrap;
+      transition: color 0.2s, background 0.2s;
+      letter-spacing: 0.3px;
+    }
+    .nav-tab:hover { color: var(--text-primary); background: rgba(0,212,255,0.05); }
+    .nav-tab.active {
+      color: var(--accent-cyan);
+      background: rgba(0,212,255,0.08);
+    }
+    .nav-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 12px; right: 12px;
+      height: 2px;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 8px var(--accent-cyan);
+      border-radius: 2px 2px 0 0;
+    }
+    .nav-tab .badge {
+      font-size: 10px;
+      background: rgba(0,212,255,0.15);
+      color: var(--accent-cyan);
+      padding: 1px 6px;
+      border-radius: 8px;
+      margin-left: 6px;
+      font-family: var(--font-mono);
+    }
+
+    /* === MAIN CONTENT === */
+    .main {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 140px 24px 60px;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+    /* === SECTION HEADERS === */
+    .section-header {
+      margin-bottom: 32px;
+    }
+    .section-header h1 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .section-header p {
+      color: var(--text-secondary);
+      font-size: 15px;
+      max-width: 700px;
+    }
+
+    /* === CARDS === */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .card:hover {
+      border-color: rgba(0,212,255,0.25);
+      box-shadow: 0 0 20px rgba(0,212,255,0.05);
+    }
+    .card-header {
+      padding: 16px 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      user-select: none;
+    }
+    .card-header:hover { background: var(--bg-card-hover); }
+    .card-category {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--accent-purple);
+      background: rgba(167,139,250,0.1);
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      flex: 1;
+    }
+    .card-chevron {
+      color: var(--text-muted);
+      transition: transform 0.25s;
+      flex-shrink: 0;
+      font-size: 12px;
+    }
+    .card.open .card-chevron { transform: rotate(180deg); }
+    .card-body {
+      display: none;
+      padding: 0 20px 20px;
+      border-top: 1px solid var(--border);
+    }
+    .card.open .card-body { display: block; }
+    .card-body p, .card-body li {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+    .card-body strong { color: var(--text-primary); }
+
+    /* === ANSWER BLOCK === */
+    .answer-block {
+      background: rgba(0,212,255,0.04);
+      border-left: 3px solid var(--accent-cyan);
+      padding: 16px;
+      margin: 12px 0;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--text-primary);
+      white-space: pre-wrap;
+    }
+
+    .tip-block {
+      background: rgba(255,170,0,0.06);
+      border-left: 3px solid var(--accent-amber);
+      padding: 12px 16px;
+      margin: 12px 0;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 13px;
+      color: var(--accent-amber);
+    }
+    .tip-block::before { content: 'TIP: '; font-weight: 700; }
+
+    /* === PITCH SELECTOR === */
+    .pitch-selector {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .pitch-btn {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 8px 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .pitch-btn:hover { border-color: var(--accent-cyan); color: var(--text-primary); }
+    .pitch-btn.active {
+      background: rgba(0,212,255,0.1);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    /* === CODE BLOCKS === */
+    .code-block {
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin: 12px 0;
+      overflow-x: auto;
+      position: relative;
+    }
+    .code-block code {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      color: var(--accent-green);
+      line-height: 1.7;
+      white-space: pre;
+    }
+    .code-block .label {
+      position: absolute;
+      top: 8px; right: 8px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      background: var(--bg-surface);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* === REVEAL BUTTON === */
+    .reveal-btn {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 8px 16px;
+      background: rgba(57,255,20,0.08);
+      border: 1px solid rgba(57,255,20,0.3);
+      color: var(--accent-green);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+      margin: 8px 0;
+    }
+    .reveal-btn:hover { background: rgba(57,255,20,0.15); }
+    .hidden-content { display: none; }
+    .hidden-content.revealed { display: block; animation: fadeIn 0.3s ease; }
+
+    /* === GRID LAYOUTS === */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .info-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      transition: border-color 0.2s;
+    }
+    .info-card:hover { border-color: rgba(0,212,255,0.25); }
+    .info-card h3 {
+      font-family: var(--font-display);
+      font-size: 12px;
+      color: var(--accent-cyan);
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+    .info-card p, .info-card li {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    /* === TACTIC BADGE === */
+    .tactic-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      margin: 2px;
+    }
+    .tactic-badge.recon { background: rgba(0,212,255,0.1); color: var(--accent-cyan); }
+    .tactic-badge.access { background: rgba(255,62,62,0.1); color: var(--accent-red); }
+    .tactic-badge.exec { background: rgba(255,170,0,0.1); color: var(--accent-amber); }
+    .tactic-badge.persist { background: rgba(167,139,250,0.1); color: var(--accent-purple); }
+    .tactic-badge.default { background: rgba(136,153,170,0.1); color: var(--text-secondary); }
+
+    /* === QUIZ === */
+    .quiz-container { margin: 20px 0; }
+    .quiz-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding: 16px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .quiz-score {
+      font-family: var(--font-mono);
+      font-size: 24px;
+      color: var(--accent-green);
+    }
+    .quiz-progress {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .quiz-question {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+    .quiz-question h3 {
+      font-size: 16px;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+    .quiz-options { display: flex; flex-direction: column; gap: 8px; }
+    .quiz-option {
+      padding: 12px 16px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+    .quiz-option:hover:not(.answered) {
+      border-color: var(--accent-cyan);
+      color: var(--text-primary);
+      background: rgba(0,212,255,0.05);
+    }
+    .quiz-option.correct {
+      border-color: var(--accent-green);
+      background: rgba(57,255,20,0.08);
+      color: var(--accent-green);
+    }
+    .quiz-option.wrong {
+      border-color: var(--accent-red);
+      background: rgba(255,62,62,0.08);
+      color: var(--accent-red);
+    }
+    .quiz-explanation {
+      margin-top: 12px;
+      padding: 12px;
+      background: rgba(0,212,255,0.04);
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      color: var(--text-secondary);
+      display: none;
+    }
+    .quiz-explanation.visible { display: block; }
+
+    /* === FLASHCARDS === */
+    .flashcard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .flashcard {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      cursor: pointer;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: all 0.3s;
+      position: relative;
+    }
+    .flashcard:hover { border-color: var(--accent-cyan); box-shadow: 0 0 15px rgba(0,212,255,0.08); }
+    .flashcard .front {
+      font-family: var(--font-mono);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+    .flashcard .back {
+      font-size: 14px;
+      color: var(--text-primary);
+      display: none;
+      line-height: 1.6;
+    }
+    .flashcard.flipped { background: rgba(0,212,255,0.06); border-color: var(--accent-cyan); }
+    .flashcard.flipped .front { display: none; }
+    .flashcard.flipped .back { display: block; }
+    .flashcard .flip-hint {
+      position: absolute;
+      bottom: 6px; right: 10px;
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    /* === FILTER BUTTONS === */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 16px 0;
+    }
+    .filter-btn {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 6px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-btn:hover { border-color: var(--accent-cyan); color: var(--text-primary); }
+    .filter-btn.active {
+      background: rgba(0,212,255,0.1);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    /* === PROGRESS BAR === */
+    .progress-bar-container {
+      background: var(--bg-surface);
+      border-radius: 4px;
+      height: 6px;
+      margin: 8px 0;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-green));
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    /* === NETWORK TIPS === */
+    .do-list, .dont-list { margin: 8px 0; padding-left: 20px; }
+    .do-list li { color: var(--accent-green); margin-bottom: 4px; font-size: 13px; }
+    .dont-list li { color: var(--accent-red); margin-bottom: 4px; font-size: 13px; }
+
+    /* === COMPARISON TABLE === */
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+    .comparison-table th {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-surface);
+    }
+    .comparison-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(26,45,74,0.5);
+      color: var(--text-secondary);
+    }
+    .comparison-table tr:hover td { background: rgba(0,212,255,0.02); }
+
+    /* === SUBSECTION === */
+    .subsection {
+      margin: 24px 0;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .subsection:first-child { border-top: none; padding-top: 0; }
+    .subsection h2 {
+      font-family: var(--font-display);
+      font-size: 14px;
+      color: var(--accent-cyan);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    /* === LISTS === */
+    ul.styled-list { list-style: none; padding: 0; }
+    ul.styled-list li {
+      padding: 8px 0 8px 20px;
+      position: relative;
+      font-size: 14px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid rgba(26,45,74,0.3);
+    }
+    ul.styled-list li::before {
+      content: '>';
+      position: absolute;
+      left: 0;
+      color: var(--accent-cyan);
+      font-family: var(--font-mono);
+      font-weight: 700;
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 768px) {
+      .main { padding: 130px 12px 40px; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .flashcard-grid { grid-template-columns: 1fr; }
+      .nav-tab { padding: 0 12px; font-size: 12px; }
+    }
+
+    /* === SCROLLBAR === */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-deep); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
+
+    /* === SEARCH BAR === */
+    .search-container {
+      margin-bottom: 20px;
+    }
+    .search-input {
+      width: 100%;
+      padding: 12px 16px 12px 40px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--accent-cyan); }
+    .search-input::placeholder { color: var(--text-muted); }
+    .search-container { position: relative; }
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* === INSIDER SECTION === */
+    .insider-banner {
+      background: linear-gradient(135deg, rgba(255,62,62,0.12) 0%, rgba(255,170,0,0.08) 100%);
+      border: 2px solid var(--accent-red);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: pulse-border 3s infinite;
+    }
+    @keyframes pulse-border {
+      0%, 100% { border-color: var(--accent-red); box-shadow: 0 0 15px rgba(255,62,62,0.15); }
+      50% { border-color: var(--accent-amber); box-shadow: 0 0 25px rgba(255,170,0,0.2); }
+    }
+    .insider-banner .icon { font-size: 24px; }
+    .insider-banner .text {
+      font-family: var(--font-display);
+      font-size: 13px;
+      letter-spacing: 1px;
+      color: var(--accent-red);
+      text-transform: uppercase;
+    }
+    .insider-banner .subtext {
+      font-family: var(--font-body);
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-transform: none;
+      letter-spacing: 0;
+      margin-top: 2px;
+    }
+    .card.insider {
+      border-color: rgba(255,62,62,0.4);
+      background: linear-gradient(135deg, rgba(255,62,62,0.06) 0%, var(--bg-card) 100%);
+    }
+    .card.insider:hover {
+      border-color: rgba(255,62,62,0.6);
+      box-shadow: 0 0 25px rgba(255,62,62,0.1);
+    }
+    .card.insider .card-category {
+      background: rgba(255,62,62,0.15);
+      color: var(--accent-red);
+    }
+    .key-points {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+    .key-point {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 4px 10px;
+      background: rgba(57,255,20,0.08);
+      border: 1px solid rgba(57,255,20,0.2);
+      color: var(--accent-green);
+      border-radius: 4px;
+    }
+    .insider-intel {
+      background: rgba(167,139,250,0.06);
+      border: 1px solid rgba(167,139,250,0.3);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-top: 16px;
+    }
+    .insider-intel h4 {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent-purple);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .insider-intel p { font-size: 13px; color: var(--text-secondary); }
+    .warning-block {
+      background: rgba(255,62,62,0.06);
+      border-left: 3px solid var(--accent-red);
+      padding: 12px 16px;
+      margin: 12px 0;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 13px;
+      color: var(--accent-red);
+    }
+
+    /* Countdown specific */
+    .countdown-bar {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+    }
+    .countdown-unit {
+      text-align: center;
+    }
+    .countdown-unit .value {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--accent-cyan);
+      line-height: 1;
+    }
+    .countdown-unit .label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+    .countdown-separator {
+      font-family: var(--font-display);
+      font-size: 28px;
+      color: var(--text-muted);
+      animation: blink 1s infinite;
+    }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+    /* PASSWORD GATE */
+    #lockScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      background: var(--bg-deep);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 24px;
+    }
+    #lockScreen.unlocked { display: none; }
+    .lock-icon {
+      font-size: 48px;
+      color: var(--accent-cyan);
+      font-family: var(--font-display);
+      letter-spacing: 4px;
+    }
+    .lock-input {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      font-family: var(--font-mono);
+      font-size: 18px;
+      padding: 14px 24px;
+      border-radius: var(--radius);
+      text-align: center;
+      width: 280px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    .lock-input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 20px rgba(0,212,255,0.15); }
+    .lock-input.shake {
+      animation: shake 0.4s ease;
+      border-color: var(--accent-red) !important;
+    }
+    @keyframes shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+    .lock-hint {
+      color: var(--text-muted);
+      font-size: 13px;
+      font-family: var(--font-mono);
+    }
+    #appContent { display: none; }
+    #appContent.visible { display: block; }
+  </style>
+</head>
+<body>
+
+  <!-- PASSWORD GATE -->
+  <div id="lockScreen">
+    <div class="lock-icon">CIPHER</div>
+    <input type="password" class="lock-input" id="lockInput" placeholder="Mot de passe" autofocus>
+    <div class="lock-hint">Accès restreint</div>
+  </div>
+  <script>
+    (function() {
+      const PASS_HASH = '0fbe383c4cf3d7e411898386da36f44ef5bc4f168b98388b435ee1d7f4fd0cac';
+      async function sha256(str) {
+        const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+      }
+      const input = document.getElementById('lockInput');
+      input.addEventListener('keydown', async function(e) {
+        if (e.key !== 'Enter') return;
+        const hash = await sha256(input.value);
+        if (hash === PASS_HASH) {
+          document.getElementById('lockScreen').classList.add('unlocked');
+          document.getElementById('appContent').classList.add('visible');
+          sessionStorage.setItem('cipher_auth', '1');
+        } else {
+          input.classList.add('shake');
+          setTimeout(() => input.classList.remove('shake'), 500);
+          input.value = '';
+        }
+      });
+      if (sessionStorage.getItem('cipher_auth') === '1') {
+        document.getElementById('lockScreen').classList.add('unlocked');
+        document.getElementById('appContent').classList.add('visible');
+      }
+    })();
+  </script>
+
+  <div id="appContent">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      CIPHER <span>// Prep Entretien SOC</span>
+    </div>
+    <div class="topbar-timer">
+      <div class="dot"></div>
+      <span id="countdown-mini">--:--:--</span>
+    </div>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="nav-container">
+    <div class="nav-tabs" id="navTabs">
+      <button class="nav-tab active" data-tab="hr">Entretien RH</button>
+      <button class="nav-tab" data-tab="splunk">Splunk <span class="badge">SPL</span></button>
+      <button class="nav-tab" data-tab="mitre">MITRE ATT&CK</button>
+      <button class="nav-tab" data-tab="soc">SOC Operations</button>
+      <button class="nav-tab" data-tab="malware">Malware & Hunting</button>
+      <button class="nav-tab" data-tab="quiz">Quiz <span class="badge" id="quizScoreBadge">0%</span></button>
+      <button class="nav-tab" data-tab="flashcards">Flashcards</button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- COUNTDOWN -->
+    <div class="countdown-bar" id="countdownBar">
+      <div class="countdown-unit"><div class="value" id="cd-hours">--</div><div class="label">heures</div></div>
+      <div class="countdown-separator">:</div>
+      <div class="countdown-unit"><div class="value" id="cd-mins">--</div><div class="label">minutes</div></div>
+      <div class="countdown-separator">:</div>
+      <div class="countdown-unit"><div class="value" id="cd-secs">--</div><div class="label">secondes</div></div>
+    </div>
+
+    <!-- TAB: HR -->
+    <div class="tab-content active" id="tab-hr">
+      <div class="section-header">
+        <h1>Entretien RH</h1>
+        <p>Questions personnalisees pour ton profil. Clique sur chaque question pour voir la reponse preparee.</p>
+      </div>
+      <div id="hr-content"></div>
+    </div>
+
+    <!-- TAB: SPLUNK -->
+    <div class="tab-content" id="tab-splunk">
+      <div class="section-header">
+        <h1>Splunk & SPL</h1>
+        <p>Architecture, commandes SPL, exercices pratiques et mapping Rapid7 vers Splunk.</p>
+      </div>
+      <div id="splunk-content"></div>
+    </div>
+
+    <!-- TAB: MITRE -->
+    <div class="tab-content" id="tab-mitre">
+      <div class="section-header">
+        <h1>MITRE ATT&CK</h1>
+        <p>Les 14 tactiques, techniques cles et mapping avec les alertes SOC.</p>
+      </div>
+      <div id="mitre-content"></div>
+    </div>
+
+    <!-- TAB: SOC -->
+    <div class="tab-content" id="tab-soc">
+      <div class="section-header">
+        <h1>Operations SOC</h1>
+        <p>Niveaux SOC, reponse aux incidents, use cases, playbooks et types de logs.</p>
+      </div>
+      <div id="soc-content"></div>
+    </div>
+
+    <!-- TAB: MALWARE -->
+    <div class="tab-content" id="tab-malware">
+      <div class="section-header">
+        <h1>Malware & Threat Hunting</h1>
+        <p>Types de malwares, methodologies d'analyse, IoC/IoA et chasse aux menaces.</p>
+      </div>
+      <div id="malware-content"></div>
+    </div>
+
+    <!-- TAB: QUIZ -->
+    <div class="tab-content" id="tab-quiz">
+      <div class="section-header">
+        <h1>Quiz Interactif</h1>
+        <p>Teste tes connaissances. Selectionne un theme et reponds aux questions.</p>
+      </div>
+      <div class="filter-bar" id="quizFilters"></div>
+      <div class="quiz-container" id="quiz-content"></div>
+    </div>
+
+    <!-- TAB: FLASHCARDS -->
+    <div class="tab-content" id="tab-flashcards">
+      <div class="section-header">
+        <h1>Flashcards</h1>
+        <p>Clique sur une carte pour reveler la reponse. Revise les concepts cles.</p>
+      </div>
+      <div class="filter-bar" id="flashcardFilters"></div>
+      <div class="flashcard-grid" id="flashcard-content"></div>
+    </div>
+  </div>
+
+  <!-- LOAD DATA FILES -->
+  <script src="sections/hr.js"></script>
+  <script src="sections/splunk.js"></script>
+  <script src="sections/mitre_soc.js"></script>
+  <script src="sections/malware_quiz.js"></script>
+
+  <script>
+    // =========================================================================
+    // CORE ENGINE
+    // =========================================================================
+
+    // --- Tab Navigation ---
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    // --- Countdown to interview ---
+    function updateCountdown() {
+      const interview = new Date('2026-02-25T16:00:00');
+      const now = new Date();
+      const diff = interview - now;
+      if (diff <= 0) {
+        document.getElementById('cd-hours').textContent = "NOW";
+        document.getElementById('cd-mins').textContent = "";
+        document.getElementById('cd-secs').textContent = "";
+        document.getElementById('countdown-mini').textContent = "EN COURS";
+        return;
+      }
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      document.getElementById('cd-hours').textContent = String(h).padStart(2, '0');
+      document.getElementById('cd-mins').textContent = String(m).padStart(2, '0');
+      document.getElementById('cd-secs').textContent = String(s).padStart(2, '0');
+      document.getElementById('countdown-mini').textContent = `${h}h ${m}m ${s}s`;
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // --- Utility: Create collapsible card ---
+    function makeCard(category, title, bodyHTML) {
+      return `<div class="card">
+        <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+          ${category ? `<span class="card-category">${category}</span>` : ''}
+          <span class="card-title">${title}</span>
+          <span class="card-chevron">&#9660;</span>
+        </div>
+        <div class="card-body">${bodyHTML}</div>
+      </div>`;
+    }
+
+    // --- Utility: Escape HTML ---
+    function esc(s) { return s ? s.replace(/</g,'&lt;').replace(/>/g,'&gt;') : ''; }
+
+    // =========================================================================
+    // RENDER: HR SECTION
+    // =========================================================================
+    function renderHR() {
+      if (typeof hrData === 'undefined') { document.getElementById('hr-content').innerHTML = '<p style="color:var(--accent-red)">Erreur: hr.js non charge.</p>'; return; }
+      let html = '';
+
+      // === INSIDER QUESTIONS (PRIORITY #1) ===
+      if (hrData.insiderQuestions) {
+        html += `<div class="insider-banner">
+          <span class="icon">&#9888;</span>
+          <div>
+            <div class="text">Questions Insider — Source interne Sopra Steria</div>
+            <div class="subtext">Ces questions sont celles posees en entretien RH. A connaitre PAR COEUR.</div>
+          </div>
+        </div>`;
+
+        hrData.insiderQuestions.forEach(q => {
+          let body = `<div class="warning-block">${q.why}</div>
+            <div class="answer-block">${q.answer}</div>
+            ${q.tips ? `<div class="tip-block">${q.tips}</div>` : ''}`;
+          if (q.keyPoints) {
+            body += `<div class="key-points">${q.keyPoints.map(kp => `<span class="key-point">${kp}</span>`).join('')}</div>`;
+          }
+          html += `<div class="card insider">
+            <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+              <span class="card-category">INSIDER Q${q.number}</span>
+              <span class="card-title">${q.q}</span>
+              <span class="card-chevron">&#9660;</span>
+            </div>
+            <div class="card-body">${body}</div>
+          </div>`;
+        });
+
+        // Insider Intel
+        if (hrData.insiderIntel) {
+          html += `<div class="insider-intel">
+            <h4>Intel de terrain</h4>
+            <p><strong>SIEM:</strong> ${hrData.insiderIntel.siem}</p>
+            <p style="margin-top:6px">${hrData.insiderIntel.advice}</p>
+            <div class="warning-block" style="margin-top:10px">${hrData.insiderIntel.doNot}</div>
+          </div>`;
+        }
+      }
+
+      // Pitch
+      html += `<div class="subsection" style="margin-top:32px"><h2>Pitch de Presentation</h2>
+        <div class="pitch-selector">
+          <button class="pitch-btn active" onclick="showPitch('short',this)">30 sec</button>
+          <button class="pitch-btn" onclick="showPitch('medium',this)">1 min</button>
+          <button class="pitch-btn" onclick="showPitch('long',this)">2 min</button>
+        </div>
+        <div class="answer-block" id="pitchDisplay">${hrData.pitch.short}</div>
+      </div>`;
+
+      // Questions
+      html += `<div class="subsection"><h2>Questions & Reponses</h2>`;
+      hrData.questions.forEach(q => {
+        html += makeCard(q.category, q.q,
+          `<div class="answer-block">${q.answer}</div>
+           ${q.tips ? `<div class="tip-block">${q.tips}</div>` : ''}`
+        );
+      });
+      html += `</div>`;
+
+      // Network Tips
+      html += `<div class="subsection"><h2>Mentionner ton Reseau INSA</h2>
+        <div class="info-card" style="margin-bottom:12px">
+          <h3>Strategie</h3>
+          <p>${hrData.networkTips.howToMention}</p>
+        </div>
+        <div class="grid-2">
+          <div class="info-card">
+            <h3 style="color:var(--accent-green)">Phrases pretes</h3>
+            <ul class="do-list">${hrData.networkTips.phrases.map(p => `<li>${p}</li>`).join('')}</ul>
+          </div>
+          <div class="info-card">
+            <h3 style="color:var(--accent-red)">A eviter</h3>
+            <ul class="dont-list">${hrData.networkTips.doNots.map(d => `<li>${d}</li>`).join('')}</ul>
+          </div>
+        </div>
+      </div>`;
+
+      // Salary
+      html += `<div class="subsection"><h2>Negociation Salariale</h2>
+        <div class="info-card" style="margin-bottom:12px">
+          <h3>Fourchette recommandee</h3>
+          <p style="font-family:var(--font-display);font-size:20px;color:var(--accent-green);margin-bottom:8px">${hrData.salaryAdvice.range}</p>
+          <p>${hrData.salaryAdvice.justification}</p>
+        </div>
+        <div class="info-card">
+          <h3>Phrases cles</h3>
+          <ul class="styled-list">${hrData.salaryAdvice.phrases.map(p => `<li>${p}</li>`).join('')}</ul>
+        </div>
+      </div>`;
+
+      // Questions to ask
+      html += `<div class="subsection"><h2>Questions a Poser au Recruteur</h2>`;
+      hrData.questionsToAsk.forEach(q => {
+        html += makeCard('A POSER', q.q, `<div class="tip-block" style="border-color:var(--accent-green);background:rgba(57,255,20,0.04);color:var(--accent-green)">${q.why}</div>`);
+      });
+      html += `</div>`;
+
+      // General Tips
+      html += `<div class="subsection"><h2>Conseils Generaux</h2>
+        <ul class="styled-list">${hrData.generalTips.map(t => `<li>${t}</li>`).join('')}</ul>
+      </div>`;
+
+      document.getElementById('hr-content').innerHTML = html;
+    }
+
+    window.showPitch = function(version, btn) {
+      document.querySelectorAll('.pitch-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('pitchDisplay').textContent = hrData.pitch[version];
+    };
+
+    // =========================================================================
+    // RENDER: SPLUNK SECTION
+    // =========================================================================
+    function renderSplunk() {
+      if (typeof splunkData === 'undefined') { document.getElementById('splunk-content').innerHTML = '<p style="color:var(--accent-red)">Erreur: splunk.js non charge.</p>'; return; }
+      let html = '';
+
+      // Architecture
+      html += `<div class="subsection"><h2>Architecture Splunk</h2><div class="grid-2">`;
+      splunkData.architecture.forEach(a => {
+        html += `<div class="info-card">
+          <h3>${a.icon || ''} ${a.title}</h3>
+          <p>${a.description}</p>
+        </div>`;
+      });
+      html += `</div></div>`;
+
+      // Concepts
+      html += `<div class="subsection"><h2>Concepts Fondamentaux</h2>`;
+      splunkData.concepts.forEach(c => {
+        html += makeCard('CONCEPT', c.term,
+          `<p>${c.definition}</p>
+           ${c.example ? `<div class="code-block"><code>${esc(c.example)}</code></div>` : ''}`
+        );
+      });
+      html += `</div>`;
+
+      // SPL Commands
+      html += `<div class="subsection"><h2>Commandes SPL</h2>`;
+      splunkData.splCommands.forEach(cat => {
+        html += `<h3 style="font-family:var(--font-display);font-size:12px;color:var(--accent-purple);letter-spacing:1px;margin:20px 0 12px;text-transform:uppercase">${cat.category}</h3>`;
+        cat.commands.forEach(cmd => {
+          html += makeCard('SPL', cmd.cmd,
+            `<p>${cmd.description}</p>
+             <div class="code-block"><span class="label">Syntaxe</span><code>${esc(cmd.syntax)}</code></div>
+             ${cmd.example ? `<div class="code-block"><span class="label">Exemple</span><code>${esc(cmd.example)}</code></div>` : ''}`
+          );
+        });
+      });
+      html += `</div>`;
+
+      // Exercises
+      html += `<div class="subsection"><h2>Exercices Pratiques</h2>`;
+      splunkData.exercises.forEach((ex, i) => {
+        const revealId = 'splunk-ex-' + i;
+        html += makeCard('EXERCICE ' + (i+1), ex.title,
+          `<p>${ex.scenario}</p>
+           ${ex.hint ? `<div class="tip-block">${ex.hint}</div>` : ''}
+           <button class="reveal-btn" onclick="document.getElementById('${revealId}').classList.toggle('revealed')">Voir la solution</button>
+           <div class="hidden-content" id="${revealId}">
+             <div class="code-block"><span class="label">Solution SPL</span><code>${esc(ex.solution)}</code></div>
+             <p style="margin-top:8px">${ex.explanation}</p>
+           </div>`
+        );
+      });
+      html += `</div>`;
+
+      // Rapid7 comparison
+      if (splunkData.rapid7Comparison) {
+        html += `<div class="subsection"><h2>Mapping Rapid7 InsightIDR → Splunk</h2>
+          <p style="color:var(--text-secondary);margin-bottom:12px">${splunkData.rapid7Comparison.intro || 'Comment tes competences Rapid7 se transferent vers Splunk.'}</p>
+          <table class="comparison-table"><thead><tr><th>Rapid7 InsightIDR</th><th>Splunk Equivalent</th><th>Notes</th></tr></thead><tbody>`;
+        splunkData.rapid7Comparison.mappings.forEach(m => {
+          html += `<tr><td>${m.rapid7}</td><td style="color:var(--accent-cyan)">${m.splunk}</td><td>${m.notes}</td></tr>`;
+        });
+        html += `</tbody></table></div>`;
+      }
+
+      // Interview Questions
+      if (splunkData.interviewQuestions) {
+        html += `<div class="subsection"><h2>Questions d'Entretien Splunk</h2>`;
+        splunkData.interviewQuestions.forEach(q => {
+          html += makeCard('ENTRETIEN', q.question || q.q,
+            `<div class="answer-block">${q.answer || q.reponse || ''}</div>`
+          );
+        });
+        html += `</div>`;
+      }
+
+      document.getElementById('splunk-content').innerHTML = html;
+    }
+
+    // =========================================================================
+    // RENDER: MITRE ATT&CK SECTION
+    // =========================================================================
+    function renderMitre() {
+      if (typeof mitreData === 'undefined') { document.getElementById('mitre-content').innerHTML = '<p style="color:var(--accent-red)">Erreur: mitre_soc.js non charge.</p>'; return; }
+      let html = '';
+
+      // Overview
+      html += `<div class="subsection"><h2>Vue d'ensemble</h2>
+        <div class="answer-block">${mitreData.overview}</div>
+      </div>`;
+
+      // Tactics
+      html += `<div class="subsection"><h2>Les 14 Tactiques</h2>`;
+      const tacticColors = {
+        'TA0043': 'recon', 'TA0042': 'recon',
+        'TA0001': 'access', 'TA0002': 'exec',
+        'TA0003': 'persist', 'TA0004': 'persist',
+        'TA0005': 'default', 'TA0006': 'access',
+        'TA0007': 'default', 'TA0008': 'exec',
+        'TA0009': 'default', 'TA0011': 'persist',
+        'TA0010': 'access', 'TA0040': 'access'
+      };
+      mitreData.tactics.forEach((tactic, idx) => {
+        const colorClass = tacticColors[tactic.id] || 'default';
+        let techniquesHTML = '<div class="grid-2" style="margin-top:12px">';
+        (tactic.techniques || []).forEach(tech => {
+          techniquesHTML += `<div class="info-card">
+            <h3>${tech.id} - ${tech.name}</h3>
+            <p>${tech.description}</p>
+            ${tech.detection ? `<p style="margin-top:8px;color:var(--accent-amber)"><strong>Detection:</strong> ${tech.detection}</p>` : ''}
+            ${tech.splunkQuery ? `<div class="code-block"><span class="label">SPL</span><code>${esc(tech.splunkQuery)}</code></div>` : ''}
+          </div>`;
+        });
+        techniquesHTML += '</div>';
+
+        html += makeCard(
+          `<span class="tactic-badge ${colorClass}">${tactic.id}</span>`,
+          `${idx + 1}. ${tactic.name}`,
+          `<p>${tactic.description}</p>${techniquesHTML}`
+        );
+      });
+      html += `</div>`;
+
+      // Use Case Mapping
+      if (mitreData.useCaseMapping) {
+        html += `<div class="subsection"><h2>Mapping Alertes SOC → MITRE</h2>`;
+        mitreData.useCaseMapping.forEach(uc => {
+          html += makeCard('USE CASE', uc.alert,
+            `<p><strong>Tactiques:</strong> ${Array.isArray(uc.tactics) ? uc.tactics.join(', ') : uc.tactics}</p>
+             <p><strong>Techniques:</strong> ${Array.isArray(uc.techniques) ? uc.techniques.join(', ') : uc.techniques}</p>
+             <p style="margin-top:8px"><strong>Reponse:</strong> ${uc.response}</p>
+             ${uc.splunkQuery ? `<div class="code-block"><span class="label">SPL</span><code>${esc(uc.splunkQuery)}</code></div>` : ''}`
+          );
+        });
+        html += `</div>`;
+      }
+
+      document.getElementById('mitre-content').innerHTML = html;
+    }
+
+    // =========================================================================
+    // RENDER: SOC OPERATIONS SECTION
+    // =========================================================================
+    function renderSOC() {
+      if (typeof socData === 'undefined') { document.getElementById('soc-content').innerHTML = '<p style="color:var(--accent-red)">Erreur: mitre_soc.js non charge.</p>'; return; }
+      let html = '';
+
+      // SOC Levels
+      html += `<div class="subsection"><h2>Niveaux du SOC</h2><div class="grid-3">`;
+      socData.levels.forEach(l => {
+        html += `<div class="info-card">
+          <h3>${l.level}</h3>
+          <p><strong>Responsabilites:</strong></p>
+          <ul class="styled-list">${(l.responsibilities || []).map(r => `<li>${r}</li>`).join('')}</ul>
+          <p style="margin-top:8px"><strong>Competences:</strong></p>
+          <ul class="styled-list">${(l.skills || []).map(s => `<li>${s}</li>`).join('')}</ul>
+        </div>`;
+      });
+      html += `</div></div>`;
+
+      // Incident Response
+      html += `<div class="subsection"><h2>Reponse aux Incidents - ${socData.incidentResponse.framework}</h2>`;
+      socData.incidentResponse.phases.forEach(phase => {
+        html += makeCard('PHASE', phase.name,
+          `<p>${phase.description}</p>
+           <ul class="styled-list">${(phase.activities || []).map(a => `<li>${a}</li>`).join('')}</ul>`
+        );
+      });
+      html += `</div>`;
+
+      // Kill Chain
+      if (socData.killChain) {
+        html += `<div class="subsection"><h2>Cyber Kill Chain</h2>
+          <p style="color:var(--text-secondary);margin-bottom:12px">${socData.killChain.description || ''}</p>`;
+        socData.killChain.phases.forEach((phase, i) => {
+          html += makeCard(`PHASE ${i+1}`, phase.name,
+            `<p>${phase.description}</p>
+             ${phase.detection ? `<p style="margin-top:8px;color:var(--accent-amber)"><strong>Detection:</strong> ${phase.detection}</p>` : ''}
+             ${phase.mitre ? `<p style="color:var(--accent-purple)"><strong>MITRE:</strong> ${phase.mitre}</p>` : ''}`
+          );
+        });
+        html += `</div>`;
+      }
+
+      // Use Cases
+      if (socData.useCases) {
+        html += `<div class="subsection"><h2>Use Cases de Detection</h2>
+          <p style="color:var(--text-secondary);margin-bottom:12px">${socData.useCases.description || ''}</p>`;
+        (socData.useCases.examples || []).forEach(uc => {
+          html += makeCard('USE CASE', uc.name,
+            `<p>${uc.description || ''}</p>
+             ${uc.dataSources ? `<p><strong>Sources:</strong> ${uc.dataSources}</p>` : ''}
+             ${uc.logic ? `<div class="code-block"><span class="label">Logique</span><code>${esc(uc.logic)}</code></div>` : ''}
+             ${uc.severity ? `<p><strong>Severite:</strong> ${uc.severity}</p>` : ''}
+             ${uc.response ? `<p><strong>Reponse:</strong> ${uc.response}</p>` : ''}`
+          );
+        });
+        html += `</div>`;
+      }
+
+      // Playbooks
+      if (socData.playbooks) {
+        html += `<div class="subsection"><h2>Playbooks de Reponse</h2>
+          <p style="color:var(--text-secondary);margin-bottom:12px">${socData.playbooks.description || ''}</p>`;
+        (socData.playbooks.examples || []).forEach(pb => {
+          let stepsHTML = '';
+          if (Array.isArray(pb.steps)) {
+            stepsHTML = `<ul class="styled-list">${pb.steps.map(s => `<li>${typeof s === 'object' ? (s.name || '') + ': ' + (s.description || s.actions || '') : s}</li>`).join('')}</ul>`;
+          } else if (pb.steps && typeof pb.steps === 'object') {
+            stepsHTML = Object.entries(pb.steps).map(([k,v]) => `<p><strong>${k}:</strong> ${Array.isArray(v) ? v.join(', ') : v}</p>`).join('');
+          }
+          html += makeCard('PLAYBOOK', pb.name, stepsHTML);
+        });
+        html += `</div>`;
+      }
+
+      // Log Types
+      if (socData.logTypes) {
+        html += `<div class="subsection"><h2>Sources de Logs</h2>`;
+        socData.logTypes.forEach(log => {
+          let body = `<p>${log.description || ''}</p>`;
+          if (log.keyEvents) {
+            body += `<table class="comparison-table"><thead><tr><th>Code</th><th>Evenement</th></tr></thead><tbody>`;
+            log.keyEvents.forEach(e => { body += `<tr><td style="color:var(--accent-cyan);font-family:var(--font-mono)">${e.code}</td><td>${e.name}</td></tr>`; });
+            body += `</tbody></table>`;
+          }
+          if (log.keyFields) {
+            body += `<ul class="styled-list">${log.keyFields.map(f => `<li>${typeof f === 'object' ? (f.field || f.name || '') + ': ' + (f.description || '') : f}</li>`).join('')}</ul>`;
+          }
+          html += makeCard('LOG SOURCE', log.source, body);
+        });
+        html += `</div>`;
+      }
+
+      // Metrics
+      if (socData.metrics) {
+        html += `<div class="subsection"><h2>KPIs SOC</h2><div class="grid-3">`;
+        (Array.isArray(socData.metrics) ? socData.metrics : []).forEach(m => {
+          html += `<div class="info-card">
+            <h3>${m.name || m.metric || ''}</h3>
+            <p>${m.description || ''}</p>
+            ${m.target ? `<p style="color:var(--accent-green);margin-top:4px"><strong>Cible:</strong> ${m.target}</p>` : ''}
+          </div>`;
+        });
+        html += `</div></div>`;
+      }
+
+      // Interview Questions
+      if (socData.interviewQuestions) {
+        html += `<div class="subsection"><h2>Questions d'Entretien SOC</h2>`;
+        (Array.isArray(socData.interviewQuestions) ? socData.interviewQuestions : []).forEach(q => {
+          html += makeCard('ENTRETIEN', q.question || q.q || '',
+            `<div class="answer-block">${q.answer || q.reponse || ''}</div>`
+          );
+        });
+        html += `</div>`;
+      }
+
+      document.getElementById('soc-content').innerHTML = html;
+    }
+
+    // =========================================================================
+    // RENDER: MALWARE & THREAT HUNTING SECTION
+    // =========================================================================
+    function renderMalware() {
+      if (typeof malwareData === 'undefined') { document.getElementById('malware-content').innerHTML = '<p style="color:var(--accent-red)">Erreur: malware_quiz.js non charge.</p>'; return; }
+      let html = '';
+
+      // Malware types
+      html += `<div class="subsection"><h2>Types de Malwares</h2>`;
+      malwareData.types.forEach(m => {
+        html += makeCard('MALWARE', m.name,
+          `<p>${m.description}</p>
+           ${m.examples ? `<p style="margin-top:8px;color:var(--accent-amber)"><strong>Exemples:</strong> ${m.examples}</p>` : ''}
+           ${m.indicators ? `<p><strong>Indicateurs:</strong></p><ul class="styled-list">${(Array.isArray(m.indicators) ? m.indicators : []).map(i => `<li>${i}</li>`).join('')}</ul>` : ''}
+           ${m.detection ? `<p style="color:var(--accent-green)"><strong>Detection:</strong> ${m.detection}</p>` : ''}`
+        );
+      });
+      html += `</div>`;
+
+      // Analysis methodology
+      if (malwareData.analysisMethodology) {
+        html += `<div class="subsection"><h2>Methodologie d'Analyse</h2><div class="grid-2">`;
+        ['static', 'dynamic'].forEach(type => {
+          const data = malwareData.analysisMethodology[type];
+          if (data) {
+            html += `<div class="info-card">
+              <h3>${type === 'static' ? 'Analyse Statique' : 'Analyse Dynamique'}</h3>
+              <p>${data.description}</p>
+              ${data.tools ? `<p style="margin-top:8px"><strong>Outils:</strong> ${Array.isArray(data.tools) ? data.tools.join(', ') : data.tools}</p>` : ''}
+              ${data.steps ? `<ul class="styled-list">${data.steps.map(s => `<li>${s}</li>`).join('')}</ul>` : ''}
+            </div>`;
+          }
+        });
+        html += `</div></div>`;
+      }
+
+      // IoC
+      if (malwareData.ioc) {
+        html += `<div class="subsection"><h2>Indicateurs de Compromission (IoC)</h2>
+          <p style="color:var(--text-secondary);margin-bottom:12px">${malwareData.ioc.description || ''}</p>
+          <div class="grid-2">`;
+        (malwareData.ioc.types || []).forEach(t => {
+          html += `<div class="info-card">
+            <h3>${t.type}</h3>
+            <ul class="styled-list">${(t.examples || []).map(e => `<li>${e}</li>`).join('')}</ul>
+          </div>`;
+        });
+        html += `</div></div>`;
+      }
+
+      // IoA
+      if (malwareData.ioa) {
+        html += `<div class="subsection"><h2>Indicateurs d'Attaque (IoA)</h2>
+          <p style="color:var(--text-secondary);margin-bottom:12px">${malwareData.ioa.description || ''}</p>
+          <ul class="styled-list">${(malwareData.ioa.examples || []).map(e => `<li>${e}</li>`).join('')}</ul>
+        </div>`;
+      }
+
+      // Threat Hunting
+      if (malwareData.threatHunting) {
+        html += `<div class="subsection"><h2>Threat Hunting</h2>
+          <p style="color:var(--text-secondary);margin-bottom:12px">${malwareData.threatHunting.description || ''}</p>`;
+
+        (malwareData.threatHunting.methodologies || []).forEach(m => {
+          html += makeCard('METHODE', m.name,
+            `<p>${m.description}</p>
+             ${m.steps ? `<ul class="styled-list">${m.steps.map(s => `<li>${s}</li>`).join('')}</ul>` : ''}`
+          );
+        });
+
+        if (malwareData.threatHunting.huntExamples) {
+          html += `<h3 style="font-family:var(--font-display);font-size:12px;color:var(--accent-purple);letter-spacing:1px;margin:20px 0 12px;text-transform:uppercase">Exemples de Hunts</h3>`;
+          malwareData.threatHunting.huntExamples.forEach((h, i) => {
+            const revId = 'hunt-' + i;
+            html += makeCard('HUNT', h.hypothesis,
+              `<p><strong>Sources:</strong> ${h.dataSources}</p>
+               <button class="reveal-btn" onclick="document.getElementById('${revId}').classList.toggle('revealed')">Voir la requete</button>
+               <div class="hidden-content" id="${revId}">
+                 <div class="code-block"><span class="label">SPL</span><code>${esc(h.query)}</code></div>
+                 ${h.expected ? `<p style="margin-top:8px">${h.expected}</p>` : ''}
+               </div>`
+            );
+          });
+        }
+        html += `</div>`;
+      }
+
+      // YARA
+      if (malwareData.yaraBasics) {
+        html += `<div class="subsection"><h2>YARA Rules</h2>
+          <p style="color:var(--text-secondary);margin-bottom:12px">${malwareData.yaraBasics.description || ''}</p>
+          ${malwareData.yaraBasics.exampleRule ? `<div class="code-block"><span class="label">Exemple YARA</span><code>${esc(malwareData.yaraBasics.exampleRule)}</code></div>` : ''}
+          ${malwareData.yaraBasics.keyPoints ? `<ul class="styled-list">${malwareData.yaraBasics.keyPoints.map(p => `<li>${p}</li>`).join('')}</ul>` : ''}
+        </div>`;
+      }
+
+      document.getElementById('malware-content').innerHTML = html;
+    }
+
+    // =========================================================================
+    // RENDER: QUIZ SECTION
+    // =========================================================================
+    let quizState = { category: 'all', score: 0, total: 0, answered: new Set() };
+
+    function renderQuiz() {
+      if (typeof quizData === 'undefined') { document.getElementById('quiz-content').innerHTML = '<p style="color:var(--accent-red)">Erreur: malware_quiz.js non charge.</p>'; return; }
+
+      // Filters
+      const categories = Object.keys(quizData).filter(k => k !== 'flashcards');
+      const labels = { splunk: 'Splunk', mitre: 'MITRE ATT&CK', soc: 'SOC Ops', malware: 'Malware', hr: 'RH' };
+      let filterHTML = `<button class="filter-btn active" onclick="filterQuiz('all',this)">Tout</button>`;
+      categories.forEach(cat => {
+        const count = (quizData[cat] || []).length;
+        filterHTML += `<button class="filter-btn" onclick="filterQuiz('${cat}',this)">${labels[cat] || cat} (${count})</button>`;
+      });
+      document.getElementById('quizFilters').innerHTML = filterHTML;
+
+      renderQuizQuestions('all');
+    }
+
+    function renderQuizQuestions(category) {
+      quizState.category = category;
+      let questions = [];
+      const categories = Object.keys(quizData).filter(k => k !== 'flashcards');
+      if (category === 'all') {
+        categories.forEach(cat => (quizData[cat] || []).forEach((q, i) => questions.push({ ...q, _cat: cat, _idx: cat + '-' + i })));
+      } else {
+        (quizData[category] || []).forEach((q, i) => questions.push({ ...q, _cat: category, _idx: category + '-' + i }));
+      }
+
+      // Shuffle
+      for (let i = questions.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [questions[i], questions[j]] = [questions[j], questions[i]];
+      }
+
+      const labels = { splunk: 'SPLUNK', mitre: 'MITRE', soc: 'SOC', malware: 'MALWARE', hr: 'RH' };
+      let html = `<div class="quiz-header">
+        <div><span class="quiz-score" id="qScore">${quizState.score}</span><span style="color:var(--text-muted);font-size:14px"> / ${questions.length}</span></div>
+        <div class="quiz-progress">${questions.length} questions</div>
+      </div>`;
+
+      questions.forEach((q, i) => {
+        const qId = 'quiz-' + q._idx;
+        html += `<div class="quiz-question" id="${qId}">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+            <span class="card-category">${labels[q._cat] || q._cat}</span>
+            <span style="color:var(--text-muted);font-family:var(--font-mono);font-size:11px">#${i + 1}</span>
+          </div>
+          <h3>${q.q}</h3>
+          <div class="quiz-options">`;
+        (q.options || []).forEach((opt, oi) => {
+          html += `<div class="quiz-option" data-qid="${qId}" data-correct="${q.correct}" data-idx="${oi}" onclick="answerQuiz(this)">${opt}</div>`;
+        });
+        html += `</div>
+          <div class="quiz-explanation" id="${qId}-exp">${q.explanation || ''}</div>
+        </div>`;
+      });
+
+      document.getElementById('quiz-content').innerHTML = html;
+    }
+
+    window.filterQuiz = function(cat, btn) {
+      document.querySelectorAll('#quizFilters .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      quizState.score = 0;
+      quizState.answered = new Set();
+      renderQuizQuestions(cat);
+    };
+
+    window.answerQuiz = function(el) {
+      const qId = el.dataset.qid;
+      if (quizState.answered.has(qId)) return;
+      quizState.answered.add(qId);
+      quizState.total++;
+
+      const correct = parseInt(el.dataset.correct);
+      const idx = parseInt(el.dataset.idx);
+      const options = document.querySelectorAll(`[data-qid="${qId}"]`);
+
+      options.forEach((opt, i) => {
+        opt.classList.add('answered');
+        if (i === correct) opt.classList.add('correct');
+        if (i === idx && i !== correct) opt.classList.add('wrong');
+      });
+
+      if (idx === correct) quizState.score++;
+      document.getElementById('qScore').textContent = quizState.score;
+      document.getElementById(qId + '-exp').classList.add('visible');
+
+      // Update badge
+      const total = document.querySelectorAll('.quiz-question').length;
+      const pct = total > 0 ? Math.round((quizState.score / quizState.answered.size) * 100) : 0;
+      document.getElementById('quizScoreBadge').textContent = pct + '%';
+    };
+
+    // =========================================================================
+    // RENDER: FLASHCARDS
+    // =========================================================================
+    function renderFlashcards() {
+      if (typeof quizData === 'undefined' || !quizData.flashcards) {
+        document.getElementById('flashcard-content').innerHTML = '<p style="color:var(--accent-red)">Erreur: flashcards non chargees.</p>';
+        return;
+      }
+
+      // Categorize flashcards
+      const cards = quizData.flashcards;
+      const getCategory = (card) => {
+        const f = (card.front || '').toLowerCase();
+        if (f.includes('eventcode') || f.includes('sysmon')) return 'logs';
+        if (f.startsWith('t1') || f.includes('ta0') || f.includes('kill chain') || f.includes('mitre')) return 'mitre';
+        if (f.startsWith('spl') || f.includes('splunk')) return 'splunk';
+        if (f.includes('nist') || f.includes('soc') || f.includes('mttd') || f.includes('mttr')) return 'soc';
+        return 'other';
+      };
+
+      const catLabels = { all: 'Tout', logs: 'Event Logs', mitre: 'MITRE', splunk: 'Splunk', soc: 'SOC/IR', other: 'Divers' };
+      const catCounts = {};
+      cards.forEach(c => { const cat = getCategory(c); catCounts[cat] = (catCounts[cat] || 0) + 1; });
+
+      let filterHTML = `<button class="filter-btn active" onclick="filterFlashcards('all',this)">Tout (${cards.length})</button>`;
+      Object.keys(catLabels).filter(k => k !== 'all').forEach(cat => {
+        if (catCounts[cat]) filterHTML += `<button class="filter-btn" onclick="filterFlashcards('${cat}',this)">${catLabels[cat]} (${catCounts[cat]})</button>`;
+      });
+      document.getElementById('flashcardFilters').innerHTML = filterHTML;
+
+      renderFlashcardCards('all');
+    }
+
+    function renderFlashcardCards(filter) {
+      const cards = quizData.flashcards;
+      const getCategory = (card) => {
+        const f = (card.front || '').toLowerCase();
+        if (f.includes('eventcode') || f.includes('sysmon')) return 'logs';
+        if (f.startsWith('t1') || f.includes('ta0') || f.includes('kill chain') || f.includes('mitre')) return 'mitre';
+        if (f.startsWith('spl') || f.includes('splunk')) return 'splunk';
+        if (f.includes('nist') || f.includes('soc') || f.includes('mttd') || f.includes('mttr')) return 'soc';
+        return 'other';
+      };
+
+      const filtered = filter === 'all' ? cards : cards.filter(c => getCategory(c) === filter);
+      let html = '';
+      filtered.forEach((card, i) => {
+        html += `<div class="flashcard" onclick="this.classList.toggle('flipped')">
+          <div class="front">${card.front}</div>
+          <div class="back">${card.back}</div>
+          <span class="flip-hint">cliquer</span>
+        </div>`;
+      });
+      document.getElementById('flashcard-content').innerHTML = html;
+    }
+
+    window.filterFlashcards = function(cat, btn) {
+      document.querySelectorAll('#flashcardFilters .filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderFlashcardCards(cat);
+    };
+
+    // =========================================================================
+    // INITIALIZE
+    // =========================================================================
+    window.addEventListener('DOMContentLoaded', () => {
+      // Small delay to ensure data files are loaded
+      setTimeout(() => {
+        renderHR();
+        renderSplunk();
+        renderMitre();
+        renderSOC();
+        renderMalware();
+        renderQuiz();
+        renderFlashcards();
+      }, 100);
+    });
+  </script>
+  </div><!-- /appContent -->
+</body>
+</html>
