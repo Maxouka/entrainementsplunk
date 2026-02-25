@@ -325,26 +325,24 @@ Et enfin, la documentation des procédures de réponse. On avait des connaissanc
       number: 3,
       q: "Pourquoi avez-vous choisi la cybersécurité ? Qu'est-ce qui vous motive dans ce domaine ?",
       why: "ATTENTION : ils vont CHALLENGER ta sincérité. Si tu dis 'je suis passionné', ils vont creuser avec des exemples concrets (CTF, projets perso, veille, etc.). Sois AUTHENTIQUE. Si tu ne fais pas de CTF, ne mens pas — parle de ce que tu fais vraiment.",
-      answer: `Ce qui m'a accroché, c'est le côté concret et l'urgence. Chez Harvest, j'étais dans l'équipe sécurité — on était 3 au départ, puis 7 — et j'ai vu de l'intérieur ce que ça implique de sécuriser un SI de 1000 machines dans un secteur financier réglementé. Le moment qui m'a vraiment marqué, c'est le déploiement BitLocker en urgence après le vol du PC d'un cadre. On avait des données clients sensibles sur des disques non chiffrés — la pression était réelle, l'enjeu concret. C'est là que j'ai compris que la cybersécurité c'est pas théorique, c'est protéger des gens et des données au quotidien.
+      answer: `Ce qui m'a amené à la cybersécurité, c'est un chemin assez naturel. Je suis très actif dans l'écosystème crypto et blockchain — Solana, DeFi, trading on-chain — et c'est là que j'ai compris viscéralement ce que c'est la cybersécurité. En crypto, le facteur d'attaque numéro 1 c'est l'humain — exactement comme en cybersécurité d'entreprise. Les gens se font drain leur wallet pas par une faille technique dans la blockchain, mais par du social engineering : un faux site de mint, un lien Discord malveillant, une approval de smart contract piégée. C'est du phishing, c'est de la manipulation. C'est exactement les mêmes mécaniques qu'on retrouve dans les alertes d'un SOC — le vecteur change, mais l'attaque est la même : exploiter la confiance humaine.
 
-Ce que j'ai fait chez Harvest, c'était surtout de la sécurité opérationnelle et de la mise en conformité — gestion des vulnérabilités, patch management, rapports KPI au COMEX, migration de protocoles obsolètes, préparation ISO 27001. C'est une base solide, mais ce que je veux maintenant c'est aller vers la détection et la réponse à incident. C'est pour ça que je vise un poste SOC : je veux être du côté de ceux qui détectent et qui investiguent, pas seulement de ceux qui durcissent l'infra.
+Et ça m'a appris à analyser des transactions, tracer des flux, identifier des patterns suspects — qui est fondamentalement le même travail qu'un analyste SOC qui lit des logs et pivote d'un indice à l'autre. En crypto tu traces un wallet malveillant à travers les transactions, en SOC tu traces une IP suspecte à travers les logs. La logique d'investigation est identique.
 
-Ce qui me motive au quotidien, c'est l'apprentissage permanent. En ce moment je me forme à Splunk et au framework MITRE ATT&CK en autonomie. Et j'ai une veille très active sur une niche qui me passionne vraiment : l'intersection entre cybersécurité et intelligence artificielle. C'est un sujet qui évolue à une vitesse folle — l'IA change complètement la donne des deux côtés. Côté attaquant, on voit du phishing généré par IA qui est quasi indétectable par les filtres classiques, du code malveillant polymorphe qui se réécrit à chaque exécution, de la reconnaissance automatisée à grande échelle. Côté défense, l'IA commence à accélérer le triage des alertes, la corrélation de logs, la détection d'anomalies comportementales. C'est une course aux armements et je trouve ça fascinant.
+Ensuite, chez Harvest, j'ai découvert l'autre côté — la sécurité opérationnelle à l'échelle d'une entreprise. Sécuriser 1000 machines, déployer BitLocker en urgence après un vol de PC, préparer un audit ISO 27001, rédiger des rapports de vulnérabilités pour le COMEX. C'est une base solide en hardening et conformité, et maintenant je veux aller vers la détection et l'investigation — c'est pour ça que je vise un poste SOC.
 
-Ce que ça implique concrètement pour un SOC, c'est qu'on va devoir adapter nos méthodes de détection — les signatures statiques ne suffiront plus face à des payloads générés dynamiquement, il faudra s'appuyer davantage sur l'analyse comportementale et le machine learning. Et en même temps, il faut rester lucide : l'IA n'est pas magique, un analyste qui comprend les fondamentaux restera indispensable pour valider et contextualiser ce que l'IA remonte.
+L'autre sujet qui me passionne et sur lequel je fais une veille très active, c'est l'intersection entre cybersécurité et IA. C'est en train de tout changer. Côté attaquant : du phishing généré par IA quasi indétectable, du malware polymorphe qui se réécrit à chaque exécution, de la reconnaissance automatisée. Côté défense : l'IA va accélérer le triage des alertes, la corrélation, la détection comportementale. Pour un SOC, ça veut dire que les règles de détection statiques ne suffiront plus — il faudra de l'analyse comportementale. Et moi j'utilise déjà l'IA au quotidien comme outil de productivité — Claude Code pour me former à Splunk, comprendre des techniques d'attaque, monter en compétences.
 
-Moi j'utilise déjà l'IA au quotidien comme outil d'apprentissage et de productivité — Claude Code pour me former, comprendre des requêtes SPL complexes, ou analyser des concepts d'attaque. C'est comme avoir un collègue senior disponible 24h/24.
-
-C'est cette combinaison qui me motive : un domaine qui évolue en permanence, des adversaires réels en face, et l'IA qui vient redistribuer les cartes. C'est pour ça que je suis là — je veux être au cœur de cette évolution, dans un SOC, à faire de la détection et de l'investigation.`,
-      tips: "SOIS HONNÊTE et PASSIONNÉ. La veille IA + cyber c'est ton vrai intérêt, pas un truc inventé. Ça montre que tu réfléchis à l'avenir du métier, pas juste aux tâches du jour. C'est un profil MODERNE et ça les interpelle. Ne mentionne pas les CTF du tout — parle de ce que tu fais VRAIMENT.",
+Je fais pas de CTF le week-end, je ne vais pas mentir. Mais ma passion pour la crypto et l'IA me pousse naturellement à comprendre les mécaniques d'attaque, à analyser des flux, à faire de la veille sur les nouvelles menaces. C'est pas du SOC sur mon temps libre, mais c'est la même curiosité et le même réflexe d'investigation — et c'est ce qui me motive à faire ce métier.`,
+      tips: "C'est ta VRAIE histoire — crypto → cyber → SOC. Le lien social engineering crypto/phishing SOC est puissant et original. L'IA c'est ta deuxième passion. Et tu assumes de pas faire de CTF — c'est honnête et ça tient la route parce que tu as d'autres activités concrètes qui prouvent ta curiosité.",
       keyPoints: [
-        "Crise BitLocker = moment décisif personnel VRAI",
-        "Honnête sur le périmètre : infra sécurité → transition vers SOC",
-        "Veille niche IA + cyber = passion authentique et différenciante",
-        "Côté offensif de l'IA : phishing IA, malware polymorphe, recon automatisée",
-        "Côté défensif : triage, corrélation, détection comportementale",
-        "Utilisation concrète de l'IA (Claude Code) = early adopter",
-        "Vision d'avenir : signatures statiques ne suffiront plus, analyse comportementale nécessaire"
+        "Crypto : facteur d'attaque #1 = l'humain (comme en cyber entreprise)",
+        "Tracer un wallet malveillant ≈ pivoter sur une IP suspecte dans un SIEM",
+        "Harvest = base solide en infra sécurité, maintenant transition vers SOC",
+        "Veille IA + cyber = passion authentique, pas du bluff",
+        "IA offensive (phishing, polymorphe) et défensive (triage, comportemental)",
+        "Utilisation concrète de l'IA (Claude Code) au quotidien",
+        "Pas de CTF et c'est assumé — la crypto et l'IA = sa vraie curiosité"
       ]
     },
     {
