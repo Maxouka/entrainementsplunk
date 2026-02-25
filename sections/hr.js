@@ -329,17 +329,22 @@ Et enfin, la documentation des procédures de réponse. On avait des connaissanc
 
 Ce que j'ai fait chez Harvest, c'était surtout de la sécurité opérationnelle et de la mise en conformité — gestion des vulnérabilités, patch management, rapports KPI au COMEX, migration de protocoles obsolètes, préparation ISO 27001. C'est une base solide, mais ce que je veux maintenant c'est aller vers la détection et la réponse à incident. C'est pour ça que je vise un poste SOC : je veux être du côté de ceux qui détectent et qui investiguent, pas seulement de ceux qui durcissent l'infra.
 
-Ce qui me motive au quotidien, c'est l'apprentissage permanent. En ce moment je me forme à Splunk et au framework MITRE ATT&CK en autonomie. Je fais ma veille technique — CERT-FR, Bleeping Computer — et j'ai mon écosystème blockchain/Solana qui me donne une perspective différente sur les nouvelles surfaces d'attaque.
+Ce qui me motive au quotidien, c'est l'apprentissage permanent. En ce moment je me forme à Splunk et au framework MITRE ATT&CK en autonomie. Et j'ai une veille très active sur une niche qui me passionne vraiment : l'intersection entre cybersécurité et intelligence artificielle. C'est un sujet qui évolue à une vitesse folle — l'IA change complètement la donne des deux côtés. Côté attaquant, on voit du phishing généré par IA qui est quasi indétectable par les filtres classiques, du code malveillant polymorphe qui se réécrit à chaque exécution, de la reconnaissance automatisée à grande échelle. Côté défense, l'IA commence à accélérer le triage des alertes, la corrélation de logs, la détection d'anomalies comportementales. C'est une course aux armements et je trouve ça fascinant.
 
-Pour être honnête, je ne fais pas de CTF régulièrement. Mais je compense par de l'auto-formation concrète, des projets personnels, et surtout une vraie envie de monter en compétences dans le domaine SOC — c'est exactement pour ça que je suis là.`,
-      tips: "SOIS HONNÊTE : tu viens de l'infra sécurité et tu veux évoluer vers le SOC. C'est une transition LOGIQUE et ils le savent — c'est un poste junior. Ne prétends pas avoir fait du SOC L1/L2 pur. L'honnêteté + la motivation = la meilleure combinaison.",
+Ce que ça implique concrètement pour un SOC, c'est qu'on va devoir adapter nos méthodes de détection — les signatures statiques ne suffiront plus face à des payloads générés dynamiquement, il faudra s'appuyer davantage sur l'analyse comportementale et le machine learning. Et en même temps, il faut rester lucide : l'IA n'est pas magique, un analyste qui comprend les fondamentaux restera indispensable pour valider et contextualiser ce que l'IA remonte.
+
+Moi j'utilise déjà l'IA au quotidien comme outil d'apprentissage et de productivité — Claude Code pour me former, comprendre des requêtes SPL complexes, ou analyser des concepts d'attaque. C'est comme avoir un collègue senior disponible 24h/24.
+
+C'est cette combinaison qui me motive : un domaine qui évolue en permanence, des adversaires réels en face, et l'IA qui vient redistribuer les cartes. C'est pour ça que je suis là — je veux être au cœur de cette évolution, dans un SOC, à faire de la détection et de l'investigation.`,
+      tips: "SOIS HONNÊTE et PASSIONNÉ. La veille IA + cyber c'est ton vrai intérêt, pas un truc inventé. Ça montre que tu réfléchis à l'avenir du métier, pas juste aux tâches du jour. C'est un profil MODERNE et ça les interpelle. Ne mentionne pas les CTF du tout — parle de ce que tu fais VRAIMENT.",
       keyPoints: [
         "Crise BitLocker = moment décisif personnel VRAI",
-        "Honnête sur le périmètre : infra sécurité, pas SOC pur",
-        "Transition logique : conformité/hardening → détection/réponse",
-        "Auto-formation Splunk + MITRE = preuve de motivation",
-        "Pas de CTF et c'est OK — être transparent",
-        "Envie de monter en compétences = exactement ce qu'ils veulent entendre d'un junior"
+        "Honnête sur le périmètre : infra sécurité → transition vers SOC",
+        "Veille niche IA + cyber = passion authentique et différenciante",
+        "Côté offensif de l'IA : phishing IA, malware polymorphe, recon automatisée",
+        "Côté défensif : triage, corrélation, détection comportementale",
+        "Utilisation concrète de l'IA (Claude Code) = early adopter",
+        "Vision d'avenir : signatures statiques ne suffiront plus, analyse comportementale nécessaire"
       ]
     },
     {
