@@ -289,59 +289,59 @@ const hrData = {
       number: 1,
       q: "Qu'avez-vous appris par vous-même lors de vos différentes missions, sans que cela soit demandé par votre management ?",
       why: "Ils testent ton INITIATIVE et ta CURIOSITÉ. C'est LA question qui sépare les passionnés des exécutants. Ils veulent voir que tu ne fais pas juste ce qu'on te demande.",
-      answer: `Plusieurs choses me viennent en tête. Chez Harvest, quand j'ai découvert que les clés de récupération BitLocker du disque D n'étaient pas remontées dans l'Active Directory — c'était un vrai problème que personne n'avait anticipé — j'ai pris l'initiative de développer un script PowerShell d'auto-unlock plutôt que d'attendre une solution du management. J'ai aussi appris Ansible de manière autonome pendant mon stage : la mission était de déployer des sondes PRTG, mais personne ne m'avait demandé d'automatiser le processus. J'ai vu qu'on perdait du temps à configurer chaque machine manuellement, alors j'ai créé des playbooks Ansible pour automatiser le tout sur une centaine de machines.
+      answer: `Plusieurs choses. Chez Harvest, quand j'ai déployé BitLocker sur le parc après le vol du PC d'un cadre, j'ai découvert que les clés de récupération du disque D ne remontaient pas dans l'Active Directory — ça bloquait les utilisateurs. Personne n'avait de solution immédiate, j'ai pris l'initiative de développer un script PowerShell d'auto-unlock et de récupérer manuellement les clés dans les logs Tanium pour dépanner les utilisateurs bloqués. C'était pas dans ma mission initiale, j'ai juste vu le problème et j'ai agi.
 
-Plus récemment, je me forme à Splunk en autonomie alors que mon poste actuel utilise Rapid7 InsightIDR. J'ai monté un environnement d'entraînement personnel pour pratiquer le SPL, parce que je sais que c'est le standard du marché et que c'est ce que vous utilisez ici. Je m'entraîne aussi sur le framework MITRE ATT&CK en mappant les alertes que je traite au quotidien sur la matrice — c'est quelque chose que j'ai commencé de ma propre initiative.
+Autre exemple : on utilisait PRTG pour la supervision, et je me suis rendu compte qu'on perdait du temps à configurer les sondes machine par machine. De ma propre initiative, j'ai commencé à automatiser le déploiement avec Salt — l'outil qu'on utilisait déjà pour la gestion de configuration — pour industrialiser ça sur notre parc de plus de 1000 machines.
 
-Enfin, en parallèle de mon poste en cybersécurité, j'ai développé un projet personnel fullstack complet — une marketplace de cours particuliers — en Next.js, React et TypeScript. Ce n'est pas directement lié à mon poste, mais ça me permet de comprendre le développement web en profondeur, ce qui est un atout quand on analyse des vulnérabilités web ou des logs applicatifs.`,
-      tips: "C'est LA question pour se démarquer. Montre que tu apprends sans qu'on te le demande. Chaque exemple doit montrer : j'ai vu un problème / une opportunité → j'ai agi de ma propre initiative → résultat concret. NE PAS être modeste ici.",
+Pour la veille sécurité, chaque semaine je rédigeais des rapports de vulnérabilités pour le COMEX. Ce qui n'était pas demandé, c'est que j'allais au-delà de la simple compilation : j'analysais les CVE publiées par l'ANSSI et je créais des fiches détaillées avec l'impact spécifique sur NOTRE infrastructure, pas juste du copier-coller générique.
+
+Et aujourd'hui, je me forme à Splunk en autonomie complète alors que chez Harvest j'utilisais Rapid7 InsightIDR. J'ai construit un site d'entraînement avec des exercices SPL, des scénarios de lecture de logs, des quiz. Personne ne me l'a demandé — je le fais parce que je sais que Splunk est le standard en SOC et que c'est ce que vous utilisez.`,
+      tips: "Chaque exemple doit montrer : j'ai vu un problème / une opportunité → j'ai agi de ma propre initiative → résultat concret. Rester HONNÊTE sur le périmètre — c'était de l'infra sécurité, pas du SOC pur, mais l'initiative est réelle.",
       keyPoints: [
-        "Script auto-unlock BitLocker = initiative technique sous pression",
-        "Ansible = automatisation proactive, pas dans la fiche de poste",
-        "Splunk en auto-formation = anticipation du marché",
-        "MITRE ATT&CK mapping = approfondissement volontaire",
-        "Projet TeachMe = curiosité technique hors périmètre"
+        "Script auto-unlock BitLocker = initiative technique sous pression réelle",
+        "Automatisation Salt = industrialisation proactive sur 1000+ machines",
+        "Rapports COMEX enrichis = aller au-delà de la mission demandée",
+        "Splunk en auto-formation = anticipation concrète du poste visé",
+        "Chaque exemple est VRAI et vérifiable"
       ]
     },
     {
       number: 2,
       q: "Si on vous avait donné carte blanche, quel est le premier point que vous auriez amélioré dans votre dernière mission ?",
       why: "Ils testent ta VISION CRITIQUE et ta capacité à prendre du recul. Attention : ne pas taper sur l'ex-employeur, mais montrer une réflexion constructive.",
-      answer: `Le premier point que j'aurais amélioré, c'est l'automatisation de la réponse aux alertes. Chez Harvest, on traitait chaque alerte du SIEM manuellement — de la qualification à la documentation en passant par les vérifications. Beaucoup d'alertes suivaient le même schéma d'investigation : les mêmes vérifications, les mêmes pivots, les mêmes conclusions pour les faux positifs récurrents. Si j'avais eu carte blanche, j'aurais mis en place des playbooks automatisés pour les cas les plus fréquents — par exemple, pour les alertes de connexion VPN depuis un pays inhabituel, un playbook qui vérifie automatiquement si l'utilisateur est en déplacement déclaré dans l'AD, croise avec les connexions précédentes, et classe en faux positif si le pattern est cohérent.
+      answer: `Le premier point, c'est la centralisation de la supervision sécurité. Chez Harvest, on avait plusieurs outils en parallèle — InsightIDR comme SIEM, Cybereason en EDR, PRTG pour le monitoring infra, et les alertes Waycom — mais il n'y avait pas de corrélation réelle entre ces sources. Chaque outil remontait ses alertes dans son coin. Si j'avais eu carte blanche, j'aurais poussé pour centraliser tout ça dans un SIEM unique avec des règles de corrélation. Par exemple, quand PRTG détecte un pic CPU anormal sur un serveur ET que Cybereason remonte un processus suspect sur le même serveur, aujourd'hui ce sont deux alertes séparées. Corrélées, c'est un incident.
 
-Concrètement, j'aurais proposé l'intégration d'un outil SOAR léger, même open source comme Shuffle ou TheHive, pour orchestrer ces réponses automatiques. Ça aurait permis de réduire le temps de traitement des alertes de niveau 1 d'au moins 40%, et de libérer du temps pour des investigations plus complexes et du threat hunting proactif.
+Le deuxième point, c'est l'automatisation de la conformité. Une grosse partie de mon travail — vérifier les mots de passe expirés dans l'AD, identifier les machines sans BitLocker, lister les protocoles obsolètes — je le faisais avec des scripts PowerShell et des exports CSV manuels. Si j'avais eu carte blanche, j'aurais mis en place un dashboard de conformité en temps réel qui remonte automatiquement l'état du parc : couverture BitLocker, état des patchs, protocoles obsolètes restants. Ça aurait transformé le rapport COMEX hebdomadaire en quelque chose de dynamique plutôt que des fichiers Excel compilés à la main.
 
-L'autre point, c'est la couverture de détection. On avait des angles morts — certaines sources de logs n'étaient pas intégrées au SIEM, et on ne faisait pas de corrélation systématique avec le framework MITRE ATT&CK. J'aurais aimé mapper toutes nos règles de détection sur la matrice pour identifier les tactiques non couvertes et combler les gaps.`,
-      tips: "Montrer qu'on a de la vision sans critiquer. Utiliser 'j'aurais amélioré' pas 'c'était nul'. Proposer des solutions concrètes et réalistes. Mentionner SOAR et MITRE ATT&CK = mots-clés valorisés par Sopra Steria.",
+Et enfin, la documentation des procédures de réponse. On avait des connaissances dans les têtes de chacun, mais pas assez de procédures écrites et formalisées. Quand j'étais d'astreinte le week-end et que je tombais sur un type d'alerte que je n'avais pas encore vu, je devais appeler un collègue. Des playbooks documentés — même basiques — auraient accéléré le traitement.`,
+      tips: "Rester HONNÊTE : tu ne faisais pas du SOC pur, tu faisais de l'infra sécurité et de la conformité. Mais tu peux quand même montrer de la vision. Le mot 'corrélation' et 'centralisation' montrent que tu comprends la logique SOC même si tu ne l'as pas pratiquée au quotidien.",
       keyPoints: [
-        "Automatisation via SOAR (Shuffle, TheHive) = vision moderne",
-        "Playbooks automatisés = gain d'efficacité mesurable (40%)",
-        "Mapping MITRE ATT&CK de la couverture = maturité SOC",
-        "Pas de critique négative, que du constructif",
-        "Montre qu'on pense au-delà de son périmètre"
+        "Centralisation des alertes multi-outils = vision SOC réaliste",
+        "Dashboard de conformité temps réel = amélioration de ce que tu faisais VRAIMENT",
+        "Playbooks documentés = besoin réel vécu lors des astreintes week-end",
+        "Pas de critique, du constructif basé sur le vécu",
+        "Tout est ancré dans ton VRAI travail, pas inventé"
       ]
     },
     {
       number: 3,
       q: "Pourquoi avez-vous choisi la cybersécurité ? Qu'est-ce qui vous motive dans ce domaine ?",
       why: "ATTENTION : ils vont CHALLENGER ta sincérité. Si tu dis 'je suis passionné', ils vont creuser avec des exemples concrets (CTF, projets perso, veille, etc.). Sois AUTHENTIQUE. Si tu ne fais pas de CTF, ne mens pas — parle de ce que tu fais vraiment.",
-      answer: `La cybersécurité c'est le seul domaine de l'IT où tu as un adversaire réel en face. C'est pas juste du code qui marche ou qui marche pas — c'est une confrontation intellectuelle permanente avec des attaquants qui innovent sans cesse. C'est ça qui m'a accroché dès le départ.
+      answer: `Ce qui m'a accroché, c'est le côté concret et l'urgence. Chez Harvest, j'étais dans l'équipe sécurité — on était 3 au départ, puis 7 — et j'ai vu de l'intérieur ce que ça implique de sécuriser un SI de 1000 machines dans un secteur financier réglementé. Le moment qui m'a vraiment marqué, c'est le déploiement BitLocker en urgence après le vol du PC d'un cadre. On avait des données clients sensibles sur des disques non chiffrés — la pression était réelle, l'enjeu concret. C'est là que j'ai compris que la cybersécurité c'est pas théorique, c'est protéger des gens et des données au quotidien.
 
-Concrètement, chez Harvest, quand j'ai vu les alertes remonter sur le SIEM et que j'ai compris que derrière chaque alerte il y avait potentiellement quelqu'un en train de tester nos défenses, ça m'a donné un sens réel à mon travail. Le jour où on a eu la crise BitLocker après un incident de sécurité, j'ai ressenti cette urgence — protéger les données de millions de clients — et c'est à ce moment-là que j'ai su que c'était ma voie.
+Ce que j'ai fait chez Harvest, c'était surtout de la sécurité opérationnelle et de la mise en conformité — gestion des vulnérabilités, patch management, rapports KPI au COMEX, migration de protocoles obsolètes, préparation ISO 27001. C'est une base solide, mais ce que je veux maintenant c'est aller vers la détection et la réponse à incident. C'est pour ça que je vise un poste SOC : je veux être du côté de ceux qui détectent et qui investiguent, pas seulement de ceux qui durcissent l'infra.
 
-Ce qui me motive au quotidien, c'est l'apprentissage permanent. En cyber, tu ne peux jamais te reposer sur tes acquis : les techniques d'attaque évoluent, les outils changent, il y a toujours quelque chose de nouveau à comprendre. Je fais ma veille quotidiennement — CERT-FR, The DFIR Report, Bleeping Computer — et je m'entraîne en autonomie. Par exemple, en ce moment je creuse Splunk et le framework MITRE ATT&CK parce que je sais que c'est central dans un SOC moderne.
+Ce qui me motive au quotidien, c'est l'apprentissage permanent. En ce moment je me forme à Splunk et au framework MITRE ATT&CK en autonomie. Je fais ma veille technique — CERT-FR, Bleeping Computer — et j'ai mon écosystème blockchain/Solana qui me donne une perspective différente sur les nouvelles surfaces d'attaque.
 
-Je suis aussi passionné par l'écosystème blockchain et Web3, et la sécurité dans cet espace est fascinante — les smart contracts, les attaques sur les bridges, le MEV — c'est un terrain de jeu où la cybersécurité prend une dimension financière directe. Ça me donne une perspective unique sur les nouvelles surfaces d'attaque.
-
-Pour être honnête, je ne fais pas de CTF de manière régulière, mais je compense par une veille technique très active, des formations en autonomie, et surtout par mon projet personnel TeachMe qui me force à penser sécurité côté développeur — CSRF, XSS, injection, gestion des sessions — c'est complémentaire à la vision SOC.`,
-      tips: "SOIS HONNÊTE SUR LES CTF. S'ils demandent 'tu fais des CTF ?', ne mens pas. Dis ce que tu fais VRAIMENT. Un profil qui fait de la veille active, de l'auto-formation et des projets perso est tout aussi crédible qu'un joueur de CTF. La passion se prouve par les actes, pas par les mots.",
+Pour être honnête, je ne fais pas de CTF régulièrement. Mais je compense par de l'auto-formation concrète, des projets personnels, et surtout une vraie envie de monter en compétences dans le domaine SOC — c'est exactement pour ça que je suis là.`,
+      tips: "SOIS HONNÊTE : tu viens de l'infra sécurité et tu veux évoluer vers le SOC. C'est une transition LOGIQUE et ils le savent — c'est un poste junior. Ne prétends pas avoir fait du SOC L1/L2 pur. L'honnêteté + la motivation = la meilleure combinaison.",
       keyPoints: [
-        "Adversaire réel = ce qui distingue la cyber des autres domaines IT",
-        "Crise BitLocker = moment décisif personnel (storytelling)",
-        "Veille quotidienne CONCRÈTE (CERT-FR, DFIR Report, etc.)",
-        "Blockchain/Web3 = perspective unique et différenciante",
-        "Honnêteté sur les CTF + compensation par d'autres activités",
-        "Projet TeachMe = sécurité côté dev (XSS, CSRF, injection)"
+        "Crise BitLocker = moment décisif personnel VRAI",
+        "Honnête sur le périmètre : infra sécurité, pas SOC pur",
+        "Transition logique : conformité/hardening → détection/réponse",
+        "Auto-formation Splunk + MITRE = preuve de motivation",
+        "Pas de CTF et c'est OK — être transparent",
+        "Envie de monter en compétences = exactement ce qu'ils veulent entendre d'un junior"
       ]
     },
     {
@@ -441,7 +441,7 @@ Et enfin, le sport m'aide à gérer le stress et à rester concentré sur de lon
   ],
 
   // --------------------------------------------------------------------------
-  // INTEL INSIDER : Le SOC utilise QRadar (pas Splunk comme dit dans l'offre)
+  // INTEL INSIDER : Le SOC utilise Splunk (confirmé par le contact interne)
   // --------------------------------------------------------------------------
   insiderIntel: {
     siem: "Splunk (confirmé par le contact interne — cohérent avec l'offre)",
