@@ -289,20 +289,18 @@ const hrData = {
       number: 1,
       q: "Qu'avez-vous appris par vous-même lors de vos différentes missions, sans que cela soit demandé par votre management ?",
       why: "Ils testent ton INITIATIVE et ta CURIOSITÉ. C'est LA question qui sépare les passionnés des exécutants. Ils veulent voir que tu ne fais pas juste ce qu'on te demande.",
-      answer: `Plusieurs choses. Chez Harvest, quand j'ai déployé BitLocker sur le parc après le vol du PC d'un cadre, j'ai découvert que les clés de récupération du disque D ne remontaient pas dans l'Active Directory — ça bloquait les utilisateurs. Personne n'avait de solution immédiate, j'ai pris l'initiative de développer un script PowerShell d'auto-unlock et de récupérer manuellement les clés dans les logs Tanium pour dépanner les utilisateurs bloqués. C'était pas dans ma mission initiale, j'ai juste vu le problème et j'ai agi.
+      answer: `Le plus gros exemple, c'est l'environnement de test PRTG. Chez Harvest on avait PRTG en production avec des milliers de sondes sur plus de 1000 machines, mais il n'y avait aucun environnement de test. Quand il fallait déployer de nouvelles sondes ou tester des configurations, on le faisait directement en prod — ce qui était risqué. De ma propre initiative, j'ai installé un serveur PRTG de test en local, j'ai monté des VMs de test qui n'existaient pas, et j'ai développé et validé des déploiements de sondes via l'API PRTG et Ansible avant de les pousser en production. Personne ne me l'avait demandé, j'ai juste vu que ça manquait et que ça nous faisait prendre des risques inutiles.
 
-Autre exemple : on utilisait PRTG pour la supervision, et je me suis rendu compte qu'on perdait du temps à configurer les sondes machine par machine. De ma propre initiative, j'ai commencé à automatiser le déploiement avec Salt — l'outil qu'on utilisait déjà pour la gestion de configuration — pour industrialiser ça sur notre parc de plus de 1000 machines.
+Deuxième exemple : pendant le déploiement BitLocker en urgence après le vol du PC d'un cadre, j'ai découvert que les clés de récupération du disque D ne remontaient pas dans l'Active Directory. Ça bloquait les utilisateurs et personne n'avait de solution immédiate. J'ai pris l'initiative de développer un script PowerShell d'auto-unlock et de récupérer manuellement les clés dans les logs Tanium pour dépanner les utilisateurs bloqués. C'était pas prévu, j'ai vu le problème en cours de route et j'ai agi.
 
-Pour la veille sécurité, chaque semaine je rédigeais des rapports de vulnérabilités pour le COMEX. Ce qui n'était pas demandé, c'est que j'allais au-delà de la simple compilation : j'analysais les CVE publiées par l'ANSSI et je créais des fiches détaillées avec l'impact spécifique sur NOTRE infrastructure, pas juste du copier-coller générique.
-
-Et aujourd'hui, je me forme à Splunk en autonomie complète alors que chez Harvest j'utilisais Rapid7 InsightIDR. J'ai construit un site d'entraînement avec des exercices SPL, des scénarios de lecture de logs, des quiz. Personne ne me l'a demandé — je le fais parce que je sais que Splunk est le standard en SOC et que c'est ce que vous utilisez.`,
-      tips: "Chaque exemple doit montrer : j'ai vu un problème / une opportunité → j'ai agi de ma propre initiative → résultat concret. Rester HONNÊTE sur le périmètre — c'était de l'infra sécurité, pas du SOC pur, mais l'initiative est réelle.",
+Et aujourd'hui, je me forme à Splunk en autonomie complète alors que chez Harvest j'utilisais Rapid7 InsightIDR. J'ai construit un environnement d'entraînement avec des exercices SPL, des scénarios de lecture de logs, des quiz techniques. Personne ne me le demande — je le fais parce que je sais que Splunk est le standard en SOC et que c'est ce que vous utilisez ici.`,
+      tips: "3 exemples avec la structure Constat → Initiative → Résultat. Le PRTG de test est le meilleur : il montre que tu améliores les process. Le BitLocker montre que tu gères la pression. Le Splunk montre que tu anticipes ta carrière. Les 3 ensemble = profil complet.",
       keyPoints: [
-        "Script auto-unlock BitLocker = initiative technique sous pression réelle",
-        "Automatisation Salt = industrialisation proactive sur 1000+ machines",
-        "Rapports COMEX enrichis = aller au-delà de la mission demandée",
+        "Env de test PRTG + Ansible + API = initiative process la plus forte",
+        "Script auto-unlock BitLocker = résolution sous pression",
         "Splunk en auto-formation = anticipation concrète du poste visé",
-        "Chaque exemple est VRAI et vérifiable"
+        "Structure : Constat → Initiative → Résultat pour chaque exemple",
+        "Tout est VRAI et vérifiable"
       ]
     },
     {
