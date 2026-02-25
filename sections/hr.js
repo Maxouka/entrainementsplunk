@@ -346,46 +346,91 @@ Pour être honnête, je ne fais pas de CTF régulièrement. Mais je compense par
       number: 4,
       q: "Question technique : lecture de logs, décrire succinctement ce qui se passe et quels pivots vous feriez.",
       why: "C'est le TEST PRATIQUE. Ils vont te montrer un extrait de log (Windows, Sysmon, ou réseau) et tu dois analyser en direct. Pas besoin d'être parfait, mais montrer ta MÉTHODOLOGIE.",
-      answer: `MÉTHODOLOGIE À SUIVRE (quelle que soit la log) :
+      answer: `══════════════════════════════════════════
+C'EST QUOI UN PIVOT ?
+══════════════════════════════════════════
 
-ÉTAPE 1 — IDENTIFIER la source
-→ Windows Security ? Sysmon ? Firewall ? Proxy ? DNS ?
-→ Regarder le EventCode / sourcetype / format
+Le pivot c'est LE concept central du travail d'analyste SOC. C'est la technique qui consiste à PARTIR D'UN INDICE ET REBONDIR DESSUS POUR EN TROUVER D'AUTRES — comme un enquêteur qui tire un fil.
 
-ÉTAPE 2 — LIRE les champs clés
-→ QUAND : timestamp (_time)
-→ QUI : utilisateur (Account_Name, SubjectUserName)
-→ OÙ : machine source/destination (src_ip, dest_ip, ComputerName)
-→ QUOI : action (EventCode, action, process)
+Exemple concret :
+1. Tu reçois une alerte : connexion suspecte depuis l'IP 185.220.101.34
+2. Tu PIVOTES sur l'IP → tu cherches tous les hôtes qui ont communiqué avec cette IP
+3. Tu trouves que la machine PC-MARTIN a contacté cette IP
+4. Tu PIVOTES sur le hostname PC-MARTIN → tu cherches tout ce que cette machine a fait récemment
+5. Tu trouves qu'un fichier update.exe a été exécuté
+6. Tu PIVOTES sur le hash du fichier → tu le cherches sur VirusTotal et dans tout le parc
+7. Tu trouves 3 autres machines avec le même fichier
+→ Chaque indice ouvre une nouvelle porte.
+
+Les champs de pivot les plus courants :
+• IP → quelles machines communiquent avec
+• Hostname → toute l'activité de cette machine
+• Username → tout ce que cet utilisateur a fait
+• Hash (MD5/SHA256) → où ce fichier existe dans le parc
+• Process name → quelles machines l'ont exécuté
+• Domain/URL → qui a visité ce site
+
+QUAND PARLER DE PIVOT EN ENTRETIEN :
+→ L'interviewer te montre des logs et demande "Qu'est-ce que tu vois ?"
+→ Tu décris factuellement (30 sec)
+→ Puis IL VA demander "Et ensuite tu fais quoi ?"
+→ C'est LÀ que tu parles de pivot : "Je pivote sur l'IP source pour voir si elle a ciblé d'autres comptes, puis sur le hostname pour voir ce qui s'est passé après la compromission..."
+→ Si on ne te le demande pas, amène-le TOI-MÊME après ton analyse.
+
+══════════════════════════════════════════
+MÉTHODOLOGIE EN 3 ÉTAPES
+══════════════════════════════════════════
+
+ÉTAPE 1 — LIRE les champs clés
+→ QUAND : timestamp
+→ QUI : utilisateur (Account_Name)
+→ OÙ : machine/IP (src_ip, dest_ip, hostname)
+→ QUOI : action (EventCode, le message à côté te dit ce que c'est)
 → COMMENT : détails (CommandLine, ParentImage, LogonType)
 
-ÉTAPE 3 — DÉCRIRE en une phrase
-→ "À [heure], l'utilisateur [X] depuis [IP] a [action] sur [cible]"
+ÉTAPE 2 — DÉCRIRE en une phrase
+→ "Je vois X échecs de login suivis d'un succès, depuis la même IP, en quelques secondes. C'est un brute force réussi."
 
-ÉTAPE 4 — PIVOTS (c'est ce qui fait la différence)
-→ Pivot temporel : que s'est-il passé AVANT et APRÈS sur cette machine ?
-→ Pivot utilisateur : cet utilisateur a-t-il eu d'autres activités suspectes ?
-→ Pivot réseau : cette IP source apparaît-elle ailleurs ? Est-elle dans les IOC ?
-→ Pivot processus : le processus parent est-il légitime ? La ligne de commande est-elle suspecte ?
-→ Corrélation : d'autres machines ont-elles le même pattern ?
+ÉTAPE 3 — PIVOTER (c'est LÀ qu'ils jugent ton niveau)
+→ "À partir de là, je pivoterais sur l'IP source pour voir si elle a ciblé d'autres comptes, sur le hostname pour voir ce qui s'est passé après le login, et je vérifierais l'IP sur VirusTotal."
 
-EXEMPLES DE LECTURES RAPIDES :
+══════════════════════════════════════════
+LES 5 EVENT CODES À CONNAÎTRE
+══════════════════════════════════════════
 
-EventCode 4625 + même src_ip × 50 en 5 min :
-→ "Tentative de brute force depuis [IP] sur le compte [X]. Pivot : vérifier si cette IP a réussi à se connecter (4624), vérifier la géoloc, chercher dans la threat intel."
+• 4624 = Login OK
+• 4625 = Login ÉCHOUÉ (brute force si en rafale)
+• 4672 = Droits admin utilisés
+• 7045 = Service installé (= persistance)
+• 1102 = Quelqu'un a effacé les logs
 
-EventCode 1 (Sysmon) + PowerShell + encodedcommand :
-→ "Exécution de PowerShell avec commande encodée — potentiellement malicieux. Pivot : décoder la commande (base64), vérifier le processus parent (Word ? cmd ?), chercher des connexions réseau (Event 3) juste après."
+Si tu ne reconnais pas un code → le MESSAGE à côté te dit ce que c'est. Dis : "Je ne connais pas ce code par cœur, mais je vois dans le message qu'il s'agit de [lire la description]. En situation réelle, je vérifierais dans la documentation."
 
-EventCode 4720 + 4732 en séquence :
-→ "Création d'un compte puis ajout à un groupe privilégié. Pivot : qui a créé le compte ? Est-ce un admin légitime ? Le timing est-il normal (3h du matin = suspect) ?"`,
-      tips: "Ne panique pas si tu ne reconnais pas le log. DEMANDE le contexte si nécessaire. Montre ta méthodologie même si tu ne connais pas l'EventCode exact. Les pivots sont PLUS IMPORTANTS que la lecture initiale — c'est là qu'ils jugent ton niveau. Utilise le vocabulaire : 'pivoter sur', 'corréler avec', 'timeline', 'contexte', 'IOC'.",
+══════════════════════════════════════════
+EXEMPLE COMPLET — CE QUE TU DIS EN ENTRETIEN
+══════════════════════════════════════════
+
+Si on te montre :
+  EventCode=4625 Account_Name=j.martin Src_IP=185.220.101.34 (×4)
+  EventCode=4624 Account_Name=j.martin Src_IP=185.220.101.34
+
+Tu dis :
+"Je vois 4 événements 4625 — des échecs d'authentification — sur le compte j.martin, suivis d'un 4624, un login réussi, le tout depuis la même IP externe en quelques secondes. C'est un brute force réussi.
+
+À partir de là je pivoterais sur 3 axes :
+1. Sur l'IP source — est-ce qu'elle a ciblé d'autres comptes ?
+2. Sur le hostname cible — qu'est-ce qui s'est passé sur cette machine après le login ?
+3. Threat intel — je vérifierais cette IP sur VirusTotal ou AbuseIPDB."
+
+Note : les logs dans un SIEM comme Splunk ne sont PAS brutes — elles sont parsées avec des champs nommés (src_ip, Account_Name, etc.). Tu travailles avec un tableau propre, pas du XML illisible.`,
+      tips: "Le PIVOT est plus important que la lecture initiale — c'est ce qui sépare un junior qui fait du bruit d'un analyste qui investigue. Même si tu ne reconnais pas un EventCode, montre ta méthodologie de pivot. Utilise les mots : 'pivoter sur', 'corréler', 'timeline', 'threat intel'. Si tu ne sais pas → dis-le honnêtement et montre comment tu chercherais.",
       keyPoints: [
-        "Méthodologie en 4 étapes : Identifier → Lire → Décrire → Pivoter",
-        "Toujours nommer les pivots possibles",
-        "EventCodes critiques : 4624 (logon), 4625 (failed), 4672 (privs), 4720 (account created), 1 (process created)",
-        "Sysmon : Event 1 (process), Event 3 (network), Event 11 (file created)",
-        "Dire 'je ne reconnais pas ce format mais voici mon approche' > inventer"
+        "PIVOT = rebondir d'indice en indice (IP → hostname → user → hash)",
+        "Parler de pivot APRÈS la description des logs ('et ensuite je pivoterais sur...')",
+        "5 codes : 4624 (login OK), 4625 (échec), 4672 (admin), 7045 (service), 1102 (logs effacés)",
+        "Si tu connais pas le code → lis le message à côté, c'est pas grave",
+        "Les logs SIEM sont parsées, pas brutes — tu lis des champs nommés",
+        "Toujours proposer au moins 3 pivots concrets"
       ]
     },
     {
