@@ -881,6 +881,7 @@
       <button class="nav-tab" data-tab="mitre">MITRE ATT&CK</button>
       <button class="nav-tab" data-tab="soc">SOC Operations</button>
       <button class="nav-tab" data-tab="malware">Malware & Hunting</button>
+      <button class="nav-tab" data-tab="logs">Lecture Logs <span class="badge" style="background:rgba(255,62,62,0.15);color:var(--accent-red)">TECH</span></button>
       <button class="nav-tab" data-tab="quiz">Quiz <span class="badge" id="quizScoreBadge">0%</span></button>
       <button class="nav-tab" data-tab="flashcards">Flashcards</button>
     </div>
@@ -953,6 +954,15 @@
       <div class="quiz-container" id="quiz-content"></div>
     </div>
 
+    <!-- TAB: LOG READING -->
+    <div class="tab-content" id="tab-logs">
+      <div class="section-header">
+        <h1>Lecture de Logs</h1>
+        <p>Exercice technique d'entretien : on te montre des logs, tu dois decrire ce qui se passe et quels pivots tu ferais.</p>
+      </div>
+      <div id="logs-content"></div>
+    </div>
+
     <!-- TAB: FLASHCARDS -->
     <div class="tab-content" id="tab-flashcards">
       <div class="section-header">
@@ -969,6 +979,7 @@
   <script src="sections/splunk.js"></script>
   <script src="sections/mitre_soc.js"></script>
   <script src="sections/malware_quiz.js"></script>
+  <script src="sections/logs_training.js"></script>
 
   <script>
     // =========================================================================
@@ -1603,6 +1614,103 @@
     // =========================================================================
     // RENDER: FLASHCARDS
     // =========================================================================
+    // =========================================================================
+    // RENDER: LOG READING TRAINING
+    // =========================================================================
+    function renderLogs() {
+      if (typeof logsTrainingData === 'undefined') {
+        document.getElementById('logs-content').innerHTML = '<p style="color:var(--accent-red)">Erreur: donnees logs non chargees.</p>';
+        return;
+      }
+      const d = logsTrainingData;
+      let html = '';
+
+      // Method section
+      html += `<div class="card" style="border-color:var(--accent-cyan);margin-bottom:24px">
+        <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="card-category" style="background:rgba(0,212,255,0.15);color:var(--accent-cyan)">METHODE</span>
+          <span class="card-title">${d.method.title}</span>
+          <span class="card-chevron">▼</span>
+        </div>
+        <div class="card-body" style="display:block">
+          <div class="grid-3" style="margin-top:12px">`;
+      d.method.steps.forEach(s => {
+        html += `<div class="info-card" style="border-color:var(--accent-cyan);text-align:center">
+          <div style="font-family:var(--font-display);font-size:28px;color:var(--accent-cyan);margin-bottom:8px">${s.num}</div>
+          <h3 style="color:var(--accent-green);margin-bottom:8px">${s.label}</h3>
+          <p>${s.desc}</p>
+        </div>`;
+      });
+      html += `</div></div></div>`;
+
+      // Event codes reference
+      html += `<div class="card" style="margin-bottom:24px">
+        <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="card-category">REFERENCE</span>
+          <span class="card-title">EventCodes essentiels a connaitre</span>
+          <span class="card-chevron">▼</span>
+        </div>
+        <div class="card-body">
+          <table class="comparison-table"><thead><tr><th>Code</th><th>Signification</th><th>Pourquoi c'est important</th></tr></thead><tbody>`;
+      d.eventCodes.forEach(e => {
+        html += `<tr><td style="font-family:var(--font-mono);color:var(--accent-cyan);font-weight:700">${e.code}</td><td style="color:var(--text-primary)">${e.meaning}</td><td>${e.detail}</td></tr>`;
+      });
+      html += `</tbody></table></div></div>`;
+
+      // Scenarios
+      html += `<div style="margin-top:8px">`;
+      d.scenarios.forEach(s => {
+        const diffColor = s.difficulty === 'Facile' ? 'var(--accent-green)' : s.difficulty === 'Moyen' ? 'var(--accent-amber)' : 'var(--accent-red)';
+        html += `<div class="card" style="margin-bottom:16px">
+          <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+            <span class="card-category" style="background:rgba(255,62,62,0.12);color:var(--accent-red)">SCENARIO ${s.id}</span>
+            <span class="card-title">${s.title}</span>
+            <span style="font-family:var(--font-mono);font-size:12px;color:${diffColor};border:1px solid ${diffColor};padding:2px 8px;border-radius:4px">${s.difficulty}</span>
+            <span class="card-chevron">▼</span>
+          </div>
+          <div class="card-body">
+            <p style="color:var(--accent-amber);font-family:var(--font-mono);font-size:13px;margin-bottom:8px">TAGS : ${s.tags.map(t => '<span style="background:rgba(167,139,250,0.1);color:var(--accent-purple);padding:2px 8px;border-radius:4px;margin:2px;display:inline-block">' + t + '</span>').join(' ')}</p>
+
+            <h4 style="font-family:var(--font-display);font-size:13px;color:var(--accent-cyan);letter-spacing:1px;margin:16px 0 8px;text-transform:uppercase">Les Logs</h4>
+            <div class="code-block"><code>${s.logs}</code></div>
+
+            <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('revealed');this.textContent=this.textContent==='Voir l\\'analyse'?'Masquer':'Voir l\\'analyse'">Voir l'analyse</button>
+            <div class="hidden-content">
+              <h4 style="font-family:var(--font-display);font-size:13px;color:var(--accent-green);letter-spacing:1px;margin:16px 0 8px;text-transform:uppercase">Ce que tu dois dire</h4>
+              <div class="answer-block">"${s.analysis}"</div>
+
+              <p style="font-family:var(--font-mono);font-size:12px;color:var(--text-muted);margin:12px 0 4px">MITRE ATT&CK : <span style="color:var(--accent-purple)">${s.mitre}</span></p>
+
+              <h4 style="font-family:var(--font-display);font-size:13px;color:var(--accent-amber);letter-spacing:1px;margin:16px 0 8px;text-transform:uppercase">Pivots a proposer</h4>`;
+        s.pivots.forEach((p, i) => {
+          html += `<div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;margin-bottom:8px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-family:var(--font-display);font-size:12px;color:var(--accent-cyan);background:rgba(0,212,255,0.1);padding:2px 8px;border-radius:4px">PIVOT ${i+1}</span>
+              <span style="font-weight:600;color:var(--text-primary);font-size:15px">${p.field}</span>
+            </div>
+            <div class="code-block" style="margin:8px 0"><code>${p.query}</code></div>
+            <p style="color:var(--accent-amber);font-size:14px"><strong>Pourquoi :</strong> ${p.why}</p>
+          </div>`;
+        });
+        html += `</div></div></div>`;
+      });
+      html += `</div>`;
+
+      // Exam tips
+      html += `<div class="card" style="border-color:var(--accent-green);margin-top:24px">
+        <div class="card-header" onclick="this.parentElement.classList.toggle('open')">
+          <span class="card-category" style="background:rgba(57,255,20,0.12);color:var(--accent-green)">TIPS</span>
+          <span class="card-title">Conseils pour l'entretien technique</span>
+          <span class="card-chevron">▼</span>
+        </div>
+        <div class="card-body" style="display:block">
+          <ul class="styled-list">`;
+      d.examTips.forEach(t => { html += `<li>${t}</li>`; });
+      html += `</ul></div></div>`;
+
+      document.getElementById('logs-content').innerHTML = html;
+    }
+
     function renderFlashcards() {
       if (typeof quizData === 'undefined' || !quizData.flashcards) {
         document.getElementById('flashcard-content').innerHTML = '<p style="color:var(--accent-red)">Erreur: flashcards non chargees.</p>';
@@ -1674,6 +1782,7 @@
         renderSOC();
         renderMalware();
         renderQuiz();
+        renderLogs();
         renderFlashcards();
       }, 100);
     });
