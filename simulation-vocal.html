@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulation Entretien Vocal - SOC Analyst Sopra Steria</title>
+<link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060b14;
+  --surface: #0e1525;
+  --surface-2: #162032;
+  --surface-3: #1e2d47;
+  --accent: #10b981;
+  --accent-light: #34d399;
+  --accent-dim: rgba(16,185,129,.15);
+  --accent-glow: rgba(16,185,129,.4);
+  --danger: #ef4444;
+  --danger-dim: rgba(239,68,68,.15);
+  --warning: #f59e0b;
+  --warning-dim: rgba(245,158,11,.15);
+  --blue: #3b82f6;
+  --blue-dim: rgba(59,130,246,.15);
+  --text: #f1f5f9;
+  --text-2: #94a3b8;
+  --text-3: #475569;
+  --border: #1e293b;
+  --glass: rgba(14,21,37,.85);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Urbanist',sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+
+/* ---- Screens ---- */
+.screen{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:1}
+.screen.active{display:flex}
+
+/* ---- BG Mesh ---- */
+.bg-mesh{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bg-mesh .orb{position:absolute;border-radius:50%;filter:blur(120px);opacity:.25;animation:float 20s ease-in-out infinite}
+.bg-mesh .orb:nth-child(1){width:600px;height:600px;background:var(--accent);top:-200px;left:-100px;animation-delay:0s}
+.bg-mesh .orb:nth-child(2){width:500px;height:500px;background:#6366f1;bottom:-150px;right:-100px;animation-delay:-7s}
+.bg-mesh .orb:nth-child(3){width:400px;height:400px;background:#0ea5e9;top:50%;left:50%;transform:translate(-50%,-50%);animation-delay:-14s}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-40px) scale(1.05)}66%{transform:translate(-20px,30px) scale(.95)}}
+
+/* ---- Incoming Call Screen ---- */
+#screen-incoming{z-index:10}
+.call-container{text-align:center;z-index:2;position:relative}
+.caller-avatar{position:relative;width:140px;height:140px;margin:0 auto 28px}
+.avatar-circle{width:140px;height:140px;border-radius:50%;background:linear-gradient(135deg,var(--surface-2),var(--surface-3));display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:700;letter-spacing:2px;color:var(--accent);border:2px solid var(--border);position:relative;z-index:2}
+.pulse-ring{position:absolute;inset:-8px;border-radius:50%;border:2px solid var(--accent);opacity:0;animation:pulse-out 2s cubic-bezier(.4,0,.2,1) infinite}
+.pulse-ring:nth-child(2){animation-delay:.5s}
+.pulse-ring:nth-child(3){animation-delay:1s}
+@keyframes pulse-out{0%{transform:scale(.9);opacity:.6}100%{transform:scale(1.8);opacity:0}}
+.call-container h2{font-size:28px;font-weight:700;margin-bottom:6px;letter-spacing:-.5px}
+.call-container .subtitle{color:var(--text-2);font-size:15px;font-weight:400;margin-bottom:4px}
+.call-status{color:var(--accent);font-family:'Fira Code',monospace;font-size:13px;margin-top:12px;margin-bottom:40px;animation:blink-status 1.5s steps(1) infinite}
+@keyframes blink-status{0%,100%{opacity:1}50%{opacity:.3}}
+.call-actions{display:flex;gap:32px;justify-content:center}
+.call-btn{width:68px;height:68px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;position:relative}
+.call-btn svg{width:28px;height:28px;fill:white}
+.call-btn.accept{background:var(--accent);box-shadow:0 0 30px var(--accent-glow)}
+.call-btn.accept:hover{transform:scale(1.1);box-shadow:0 0 50px var(--accent-glow)}
+.call-btn.decline{background:var(--danger);box-shadow:0 0 30px rgba(239,68,68,.3)}
+.call-btn.decline:hover{transform:scale(1.1)}
+.call-btn-label{display:block;font-size:12px;color:var(--text-2);margin-top:10px;text-align:center}
+
+/* ---- Connecting ---- */
+.connecting-text{font-size:20px;font-weight:500;color:var(--text-2)}
+.connecting-dots::after{content:'';animation:dots 1.5s steps(4) infinite}
+@keyframes dots{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}}
+
+/* ---- Interview Screen ---- */
+#screen-interview{flex-direction:column;padding:0}
+.interview-header{width:100%;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;background:var(--glass);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:5}
+.q-counter{font-family:'Fira Code',monospace;font-size:13px;color:var(--accent);background:var(--accent-dim);padding:6px 14px;border-radius:20px;font-weight:500}
+.timer-display{display:flex;gap:20px;align-items:center}
+.timer{font-family:'Fira Code',monospace;font-size:22px;font-weight:500;letter-spacing:2px}
+.timer-label{font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px}
+.timer-group{text-align:center}
+.interview-body{flex:1;display:flex;width:100%;position:relative;overflow:hidden}
+.side{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;position:relative}
+.side-divider{width:1px;background:var(--border);align-self:stretch;margin:24px 0}
+/* Recruiter side */
+.recruiter-side .avatar-circle{width:120px;height:120px;font-size:36px;margin-bottom:16px;transition:box-shadow .3s,border-color .3s}
+.recruiter-side .avatar-circle.speaking{border-color:var(--accent);box-shadow:0 0 40px var(--accent-glow),0 0 80px rgba(16,185,129,.15)}
+.speak-waves{display:flex;gap:3px;align-items:center;height:20px;margin-bottom:16px;opacity:0;transition:opacity .3s}
+.speak-waves.active{opacity:1}
+.speak-waves .wave{width:3px;background:var(--accent);border-radius:2px;animation:wave-bar .8s ease-in-out infinite}
+.speak-waves .wave:nth-child(1){height:8px;animation-delay:0s}
+.speak-waves .wave:nth-child(2){height:16px;animation-delay:.1s}
+.speak-waves .wave:nth-child(3){height:12px;animation-delay:.2s}
+.speak-waves .wave:nth-child(4){height:18px;animation-delay:.3s}
+.speak-waves .wave:nth-child(5){height:10px;animation-delay:.15s}
+@keyframes wave-bar{0%,100%{transform:scaleY(.4)}50%{transform:scaleY(1)}}
+.recruiter-name{font-size:14px;font-weight:600;color:var(--text-2);margin-bottom:8px;letter-spacing:.5px;text-transform:uppercase}
+.question-bubble{max-width:500px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin-top:20px;font-size:17px;line-height:1.65;font-weight:400;position:relative;text-align:center}
+.question-bubble::before{content:'';position:absolute;top:-8px;left:50%;transform:translateX(-50%) rotate(45deg);width:14px;height:14px;background:var(--surface-2);border-top:1px solid var(--border);border-left:1px solid var(--border)}
+/* User side */
+.user-cam-container{width:280px;height:210px;border-radius:var(--radius);overflow:hidden;background:var(--surface-2);border:2px solid var(--border);position:relative;margin-bottom:16px}
+.user-cam-container video{width:100%;height:100%;object-fit:cover}
+.user-cam-container .cam-off{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--surface)}
+.user-cam-container .cam-off .avatar-circle{width:80px;height:80px;font-size:24px}
+.user-name{font-size:14px;font-weight:600;color:var(--text-2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:12px}
+.mic-indicator{display:flex;gap:3px;align-items:flex-end;height:32px;padding:4px;background:var(--surface);border-radius:8px;margin-bottom:12px}
+.mic-indicator .bar{width:4px;background:var(--accent);border-radius:2px;transition:height .08s;height:4px}
+.mic-indicator.active .bar{animation:mic-bar .6s ease-in-out infinite}
+.mic-indicator .bar:nth-child(1){animation-delay:0s}
+.mic-indicator .bar:nth-child(2){animation-delay:.08s}
+.mic-indicator .bar:nth-child(3){animation-delay:.16s}
+.mic-indicator .bar:nth-child(4){animation-delay:.24s}
+.mic-indicator .bar:nth-child(5){animation-delay:.32s}
+.mic-indicator .bar:nth-child(6){animation-delay:.24s}
+.mic-indicator .bar:nth-child(7){animation-delay:.16s}
+@keyframes mic-bar{0%,100%{height:4px}50%{height:28px}}
+.user-status{font-size:13px;font-weight:500;padding:6px 16px;border-radius:20px;transition:all .3s}
+.user-status.waiting{color:var(--text-3);background:var(--surface)}
+.user-status.listening{color:var(--accent);background:var(--accent-dim)}
+.user-status.done{color:var(--blue);background:var(--blue-dim)}
+.transcript-live{max-width:400px;margin-top:16px;font-size:13px;color:var(--text-2);text-align:center;min-height:40px;line-height:1.5;max-height:80px;overflow-y:auto}
+.transcript-live .interim{opacity:.5;font-style:italic}
+/* Controls bar */
+.interview-controls{width:100%;padding:16px 32px;display:flex;align-items:center;justify-content:center;gap:16px;background:var(--glass);backdrop-filter:blur(20px);border-top:1px solid var(--border);z-index:5}
+.ctrl-btn{height:48px;border-radius:24px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 20px;font-family:'Urbanist',sans-serif;font-size:14px;font-weight:600;transition:all .2s}
+.ctrl-btn:hover:not(:disabled){background:var(--surface-3);border-color:var(--text-3)}
+.ctrl-btn:disabled{opacity:.3;cursor:default}
+.ctrl-btn svg{width:20px;height:20px;fill:currentColor}
+.ctrl-btn.icon-only{width:48px;padding:0}
+.ctrl-btn.btn-next{background:var(--accent);border-color:var(--accent);color:#fff}
+.ctrl-btn.btn-next:hover:not(:disabled){background:var(--accent-light);box-shadow:0 0 20px var(--accent-glow)}
+.ctrl-btn.btn-hangup{background:var(--danger);border-color:var(--danger);color:#fff}
+.ctrl-btn.btn-hangup:hover{background:#dc2626}
+.ctrl-btn.muted{background:var(--danger-dim);border-color:var(--danger);color:var(--danger)}
+
+/* ---- Evaluation Screen ---- */
+#screen-evaluation{padding:32px;overflow-y:auto;justify-content:flex-start;align-items:stretch}
+.eval-container{max-width:900px;margin:0 auto;width:100%}
+.eval-header{text-align:center;margin-bottom:40px}
+.eval-title{font-size:14px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+.eval-header h1{font-size:32px;font-weight:800;letter-spacing:-1px;margin-bottom:32px}
+.score-row{display:flex;justify-content:center;gap:48px;margin-bottom:32px}
+.score-item{text-align:center}
+.score-ring{width:100px;height:100px;position:relative;margin:0 auto 12px}
+.score-ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.score-ring .bg{fill:none;stroke:var(--surface-3);stroke-width:6}
+.score-ring .fg{fill:none;stroke:var(--accent);stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1)}
+.score-ring .value{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Fira Code',monospace;font-size:24px;font-weight:700}
+.score-label{font-size:13px;color:var(--text-2);font-weight:500}
+.eval-stats{display:flex;justify-content:center;gap:32px}
+.stat-chip{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 20px;text-align:center}
+.stat-chip .val{font-family:'Fira Code',monospace;font-size:18px;font-weight:600;display:block}
+.stat-chip .lbl{font-size:11px;color:var(--text-3);text-transform:uppercase;letter-spacing:1px;margin-top:4px;display:block}
+/* Question cards */
+.eval-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;transition:border-color .2s}
+.eval-card:hover{border-color:var(--text-3)}
+.eval-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.eval-q-num{font-family:'Fira Code',monospace;font-size:12px;color:var(--accent);background:var(--accent-dim);padding:4px 10px;border-radius:12px}
+.eval-q-time{font-family:'Fira Code',monospace;font-size:13px;color:var(--text-3)}
+.eval-q-title{font-size:15px;font-weight:600;margin-bottom:16px;line-height:1.4}
+.coverage-bar{height:6px;background:var(--surface-3);border-radius:3px;margin-bottom:16px;overflow:hidden}
+.coverage-bar .fill{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.4,0,.2,1);width:0}
+.coverage-bar .fill.high{background:var(--accent)}
+.coverage-bar .fill.mid{background:var(--warning)}
+.coverage-bar .fill.low{background:var(--danger)}
+.kw-section{margin-bottom:12px}
+.kw-section-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-3);margin-bottom:8px;font-weight:600}
+.kw-tags{display:flex;flex-wrap:wrap;gap:6px}
+.kw-tag{font-size:12px;padding:4px 10px;border-radius:6px;font-weight:500}
+.kw-tag.hit{background:var(--accent-dim);color:var(--accent)}
+.kw-tag.miss{background:var(--danger-dim);color:var(--danger);opacity:.7}
+.eval-feedback{font-size:13px;color:var(--text-2);line-height:1.5;padding:12px 16px;background:var(--surface-2);border-radius:var(--radius-sm);border-left:3px solid var(--accent)}
+.eval-transcript{margin-top:12px;font-size:13px;color:var(--text-3);line-height:1.5;padding:12px 16px;background:var(--surface-2);border-radius:var(--radius-sm);display:none;max-height:120px;overflow-y:auto;font-style:italic}
+.eval-transcript.show{display:block}
+.btn-transcript-toggle{font-size:12px;color:var(--text-3);background:none;border:none;cursor:pointer;margin-top:8px;font-family:'Urbanist',sans-serif;text-decoration:underline}
+.btn-transcript-toggle:hover{color:var(--text-2)}
+.eval-actions{display:flex;gap:16px;justify-content:center;margin-top:32px;padding-bottom:40px}
+.eval-actions button{padding:14px 28px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--surface-2);color:var(--text);font-family:'Urbanist',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .2s}
+.eval-actions button:hover{background:var(--surface-3);border-color:var(--text-3)}
+.eval-actions button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.eval-actions button.primary:hover{background:var(--accent-light)}
+
+/* ---- Compat Warning ---- */
+.compat-overlay{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:32px}
+.compat-box{max-width:480px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:40px;text-align:center}
+.compat-box h2{margin-bottom:16px;font-size:22px}
+.compat-box p{color:var(--text-2);line-height:1.6;margin-bottom:20px}
+.compat-box a{color:var(--accent)}
+
+/* ---- Animations ---- */
+@keyframes fade-in{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes scale-in{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.fade-in{animation:fade-in .6s cubic-bezier(.4,0,.2,1) forwards}
+.fade-in-delay{animation:fade-in .6s cubic-bezier(.4,0,.2,1) .2s forwards;opacity:0}
+.scale-in{animation:scale-in .5s cubic-bezier(.4,0,.2,1) forwards}
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--surface)}
+::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:3px}
+</style>
+</head>
+<body>
+
+<div class="bg-mesh"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+
+<!-- ============ COMPAT WARNING ============ -->
+<div class="compat-overlay" id="compat-warning" style="display:none">
+  <div class="compat-box">
+    <h2>Navigateur non compatible</h2>
+    <p>Cette simulation utilise la reconnaissance vocale (Web Speech API) qui n'est disponible que sur <strong>Google Chrome</strong> ou <strong>Microsoft Edge</strong>.</p>
+    <p>Ouvre cette page dans Chrome ou Edge pour continuer.</p>
+  </div>
+</div>
+
+<!-- ============ SCREEN: INCOMING CALL ============ -->
+<div id="screen-incoming" class="screen active">
+  <div class="call-container fade-in">
+    <div class="caller-avatar">
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+      <div class="avatar-circle">SM</div>
+    </div>
+    <h2>Sophie Martin</h2>
+    <p class="subtitle">Recrutrice Cyber - Sopra Steria</p>
+    <p class="call-status">Appel entrant<span class="connecting-dots"></span></p>
+    <div class="call-actions">
+      <div>
+        <button class="call-btn decline" onclick="declineCall()">
+          <svg viewBox="0 0 24 24"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08a.956.956 0 010-1.36C3.42 8.78 7.49 7 12 7s8.58 1.78 11.71 4.72c.38.37.38.98 0 1.36l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.1-.7-.28-.79-.74-1.69-1.36-2.67-1.85a1 1 0 01-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg>
+        </button>
+        <span class="call-btn-label">Refuser</span>
+      </div>
+      <div>
+        <button class="call-btn accept" onclick="acceptCall()">
+          <svg viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
+        </button>
+        <span class="call-btn-label">Accepter</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SCREEN: INTERVIEW ============ -->
+<div id="screen-interview" class="screen">
+  <div class="interview-header">
+    <span class="q-counter" id="q-counter">Question 1 / 6</span>
+    <div class="timer-display">
+      <div class="timer-group">
+        <div class="timer" id="q-timer">00:00</div>
+        <div class="timer-label">Question</div>
+      </div>
+      <div class="timer-group">
+        <div class="timer" id="total-timer" style="color:var(--text-3);font-size:16px">00:00</div>
+        <div class="timer-label">Total</div>
+      </div>
+    </div>
+    <span class="q-counter" id="phase-label" style="background:var(--surface-2);color:var(--text-2)">En attente</span>
+  </div>
+  <div class="interview-body">
+    <div class="side recruiter-side">
+      <div class="avatar-circle" id="recruiter-avatar">SM</div>
+      <div class="speak-waves" id="speak-waves">
+        <div class="wave"></div><div class="wave"></div><div class="wave"></div><div class="wave"></div><div class="wave"></div>
+      </div>
+      <div class="recruiter-name">Sophie Martin</div>
+      <div class="question-bubble" id="question-bubble">
+        <p id="question-text">Connexion en cours...</p>
+      </div>
+    </div>
+    <div class="side-divider"></div>
+    <div class="side user-side">
+      <div class="user-cam-container" id="cam-container">
+        <video id="user-cam" autoplay muted playsinline></video>
+        <div class="cam-off" id="cam-off" style="display:none">
+          <div class="avatar-circle" style="width:80px;height:80px;font-size:24px">ML</div>
+        </div>
+      </div>
+      <div class="user-name">Maxime Launoy</div>
+      <div class="mic-indicator" id="mic-indicator">
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+        <div class="bar"></div><div class="bar"></div><div class="bar"></div>
+      </div>
+      <div class="user-status waiting" id="user-status">En attente</div>
+      <div class="transcript-live" id="transcript-live"></div>
+    </div>
+  </div>
+  <div class="interview-controls">
+    <button class="ctrl-btn icon-only" id="btn-mic" onclick="toggleMic()" title="Micro">
+      <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+    </button>
+    <button class="ctrl-btn icon-only" id="btn-cam" onclick="toggleCam()" title="Camera">
+      <svg viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+    </button>
+    <button class="ctrl-btn btn-next" id="btn-next" onclick="nextQuestion()" disabled>
+      Question suivante
+      <svg viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="white"/></svg>
+    </button>
+    <button class="ctrl-btn btn-hangup icon-only" onclick="endInterview()" title="Raccrocher">
+      <svg viewBox="0 0 24 24"><path d="M12 9c-1.6 0-3.15.25-4.6.72v3.1c0 .39-.23.74-.56.9-.98.49-1.87 1.12-2.66 1.85-.18.18-.43.28-.7.28-.28 0-.53-.11-.71-.29L.29 13.08a.956.956 0 010-1.36C3.42 8.78 7.49 7 12 7s8.58 1.78 11.71 4.72c.38.37.38.98 0 1.36l-2.48 2.48c-.18.18-.43.29-.71.29-.27 0-.52-.1-.7-.28-.79-.74-1.69-1.36-2.67-1.85a1 1 0 01-.56-.9v-3.1C15.15 9.25 13.6 9 12 9z"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ============ SCREEN: EVALUATION ============ -->
+<div id="screen-evaluation" class="screen">
+  <div class="eval-container" id="eval-container"></div>
+</div>
+
+<script>
+// ==========================================
+// QUESTIONS DATA
+// ==========================================
+const QUESTIONS = [
+  {
+    q: "Qu'avez-vous appris par vous-m\u00eame lors de vos diff\u00e9rentes missions, sans que cela soit demand\u00e9 par votre management ?",
+    concepts: [
+      { label: "Ansible / automatisation", triggers: ["ansible","automatis","script","powershell"] },
+      { label: "PRTG / monitoring", triggers: ["prtg","monitoring","supervision","sonde"] },
+      { label: "100+ VM (scale)", triggers: ["100","cent","vm","machine"] },
+      { label: "Env de test local", triggers: ["test","local","valider","environnement"] },
+      { label: "API technique", triggers: ["api","deploiement","d\u00e9ploiement"] },
+      { label: "SIEM par curiosit\u00e9", triggers: ["siem","rapid7","insightidr","alerte"] },
+      { label: "R\u00e9sultat en production", triggers: ["production","retenu","utilis"] },
+      { label: "Initiative personnelle", triggers: ["initiative","moi-m\u00eame","moi meme","curiosit"] }
+    ],
+    idealMin: 45, idealMax: 120
+  },
+  {
+    q: "Si on vous avait donn\u00e9 carte blanche, quel est le premier point que vous auriez am\u00e9lior\u00e9 dans votre derni\u00e8re mission ?",
+    concepts: [
+      { label: "Veille CERT", triggers: ["cert","bulletin","veille"] },
+      { label: "CVE / vuln\u00e9rabilit\u00e9s", triggers: ["cve","vulnerabilit","vuln\u00e9rabilit","faille"] },
+      { label: "Tickets Jira", triggers: ["jira","ticket","fiche"] },
+      { label: "Reporting COMEX", triggers: ["comex","rapport","direction","hebdo"] },
+      { label: "Automatisation", triggers: ["automatis","automatique","syst\u00e8me"] },
+      { label: "Inventaire assets", triggers: ["asset","inventaire","parc","version"] },
+      { label: "Mention IA", triggers: ["ia","intelligence artificielle","claude"] }
+    ],
+    idealMin: 40, idealMax: 100
+  },
+  {
+    q: "Pourquoi avez-vous choisi la cybers\u00e9curit\u00e9 ? Qu'est-ce qui vous motive dans ce domaine ?",
+    concepts: [
+      { label: "Jeux vid\u00e9o / parcours", triggers: ["jeu","vid\u00e9o","video","gaming","gamer"] },
+      { label: "Formation INSA", triggers: ["insa","\u00e9cole","ecole","\u00e9tude","etude","dipl\u00f4me"] },
+      { label: "Investigation / enqu\u00eate", triggers: ["investigation","enqu\u00eate","enquete","escape","fil"] },
+      { label: "SIEM chez Harvest", triggers: ["siem","harvest"] },
+      { label: "IA x cyber", triggers: ["ia","intelligence artificielle"] },
+      { label: "Honn\u00eatet\u00e9 CTF", triggers: ["ctf","comp\u00e9tition","competition","capture"] },
+      { label: "OSINT blockchain", triggers: ["osint","blockchain","wallet","solscan","etherscan"] }
+    ],
+    idealMin: 45, idealMax: 120
+  },
+  {
+    q: "Question technique : si je vous montre des logs, comment les analysez-vous ? D\u00e9crivez votre m\u00e9thodologie.",
+    concepts: [
+      { label: "EventCode login (4624/4625)", triggers: ["4624","4625","login","authentification","brute force"] },
+      { label: "Concept de pivot", triggers: ["pivot","pivoter","rebondir"] },
+      { label: "Pivot sur IP", triggers: ["ip","adresse ip","source"] },
+      { label: "Pivot sur hostname", triggers: ["hostname","machine","poste"] },
+      { label: "Threat Intel", triggers: ["virustotal","abuseipdb","threat intel","r\u00e9putation","reputation"] },
+      { label: "IOC", triggers: ["ioc","indicateur","compromission"] },
+      { label: "C2 / persistance", triggers: ["c2","command","control","persistance","7045"] },
+      { label: "Splunk / requ\u00eate", triggers: ["splunk","requ\u00eate","requete","index","search"] },
+      { label: "MITRE ATT&CK", triggers: ["mitre","att.ck","tactique","technique"] },
+      { label: "M\u00e9thodologie 3 \u00e9tapes", triggers: ["observer","d\u00e9crire","decrire","lire","champ","timestamp"] }
+    ],
+    idealMin: 60, idealMax: 180
+  },
+  {
+    q: "Quel est votre point de vue sur l'IA et l'utilisez-vous aujourd'hui ? Si oui, pourquoi ?",
+    concepts: [
+      { label: "IA = amplificateur", triggers: ["amplificateur","amplifie","acc\u00e9l\u00e9rat","accelerat","gain"] },
+      { label: "Pr\u00e9cautions donn\u00e9es", triggers: ["confidentiel","pr\u00e9caution","precaution","s\u00e9curit","securit","local","donn\u00e9e","donnee"] },
+      { label: "SaaS trouverunprof", triggers: ["trouverunprof","prof","professeur","saas","plateforme"] },
+      { label: "Claude Code", triggers: ["claude","claude code"] },
+      { label: "Outil recherche emploi", triggers: ["emploi","recherche","scraping","cv"] },
+      { label: "Case study", triggers: ["case study","\u00e9tude de cas","etude de cas","document"] },
+      { label: "Vision IA x cyber", triggers: ["cyber","d\u00e9fense","defense","attaque","d\u00e9tecter","detecter","attaquant"] }
+    ],
+    idealMin: 50, idealMax: 150
+  },
+  {
+    q: "Avez-vous des hobbies ou activit\u00e9s personnelles qui vous servent dans votre travail ? Pouvez-vous donner un exemple ?",
+    concepts: [
+      { label: "Profil builder", triggers: ["construire","builder","solution","probl\u00e8me","probleme","proches"] },
+      { label: "Blockchain / DeFi", triggers: ["blockchain","crypto","defi","bitcoin","ethereum","solana"] },
+      { label: "Cold wallet physique", triggers: ["cold wallet","portefeuille","physique","cl\u00e9 priv\u00e9e","cle privee","hardware"] },
+      { label: "Tra\u00e7abilit\u00e9 wallets", triggers: ["solscan","etherscan","trace","transaction"] },
+      { label: "OSINT blockchain", triggers: ["osint","corr\u00e9lation","correlation","twitter"] },
+      { label: "Musculation / sport", triggers: ["musculation","sport","physique","gym","salle"] },
+      { label: "Projet pour proches", triggers: ["trouverunprof","fianc\u00e9e","fiancee","proches","famille"] }
+    ],
+    idealMin: 45, idealMax: 120
+  }
+];
+
+// ==========================================
+// STATE
+// ==========================================
+let currentQ = 0;
+let isListening = false;
+let isMicMuted = false;
+let isCamOn = true;
+let qStartTime = 0;
+let totalStartTime = 0;
+let qTimerInterval = null;
+let totalTimerInterval = null;
+let mediaStream = null;
+let audioCtx = null;
+let analyser = null;
+let recognition = null;
+let synth = window.speechSynthesis;
+let transcripts = [];
+let durations = [];
+let currentTranscript = '';
+let animFrameId = null;
+let ringInterval = null;
+
+// ==========================================
+// INIT
+// ==========================================
+(function init() {
+  const hasSR = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
+  const hasTTS = 'speechSynthesis' in window;
+  if (!hasSR || !hasTTS) {
+    document.getElementById('compat-warning').style.display = 'flex';
+    return;
+  }
+  startRingSound();
+})();
+
+// ==========================================
+// SOUNDS (Web Audio API)
+// ==========================================
+function playTone(freq, duration, vol = 0.08) {
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.connect(gain); gain.connect(ctx.destination);
+  osc.frequency.value = freq;
+  osc.type = 'sine';
+  gain.gain.value = vol;
+  osc.start();
+  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+  setTimeout(() => { osc.stop(); ctx.close(); }, duration * 1000 + 100);
+}
+
+function playDing() { playTone(880, 0.4, 0.1); setTimeout(() => playTone(1100, 0.3, 0.06), 150); }
+
+function startRingSound() {
+  let on = true;
+  ringInterval = setInterval(() => {
+    if (on) { playTone(440, 0.2, 0.06); setTimeout(() => playTone(520, 0.2, 0.06), 220); }
+    on = !on;
+  }, 1000);
+}
+function stopRingSound() { clearInterval(ringInterval); }
+
+// ==========================================
+// CALL FLOW
+// ==========================================
+function declineCall() {
+  stopRingSound();
+  document.getElementById('screen-incoming').querySelector('.call-status').textContent = 'Appel refuse';
+  setTimeout(() => location.reload(), 1500);
+}
+
+async function acceptCall() {
+  stopRingSound();
+  playTone(600, 0.15, 0.08);
+  showScreen('screen-interview');
+
+  // Get media
+  try {
+    mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    document.getElementById('user-cam').srcObject = mediaStream;
+    setupAudioAnalyser(mediaStream);
+  } catch (e) {
+    try {
+      mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      setupAudioAnalyser(mediaStream);
+    } catch (e2) {
+      console.warn('No mic access:', e2);
+    }
+    document.getElementById('cam-off').style.display = 'flex';
+    document.getElementById('user-cam').style.display = 'none';
+    isCamOn = false;
+  }
+
+  // Init speech recognition
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
+  recognition.lang = 'fr-FR';
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.maxAlternatives = 1;
+
+  recognition.onresult = (e) => {
+    let interim = '';
+    let final = '';
+    for (let i = 0; i < e.results.length; i++) {
+      const t = e.results[i][0].transcript;
+      if (e.results[i].isFinal) final += t + ' ';
+      else interim += t;
+    }
+    currentTranscript = final + interim;
+    const el = document.getElementById('transcript-live');
+    const display = currentTranscript.length > 150 ? '...' + currentTranscript.slice(-150) : currentTranscript;
+    el.innerHTML = display.replace(interim, '<span class="interim">' + interim + '</span>');
+  };
+
+  recognition.onerror = (e) => {
+    if (e.error !== 'no-speech' && e.error !== 'aborted') console.warn('SR error:', e.error);
+  };
+
+  recognition.onend = () => {
+    if (isListening && !isMicMuted) {
+      try { recognition.start(); } catch(e) {}
+    }
+  };
+
+  // Start timers
+  totalStartTime = Date.now();
+  totalTimerInterval = setInterval(updateTotalTimer, 1000);
+
+  // Brief pause then start first question
+  setTimeout(() => askQuestion(0), 2000);
+}
+
+// ==========================================
+// INTERVIEW FLOW
+// ==========================================
+function askQuestion(index) {
+  currentQ = index;
+  currentTranscript = '';
+  document.getElementById('transcript-live').textContent = '';
+  document.getElementById('q-counter').textContent = `Question ${index + 1} / 6`;
+  document.getElementById('btn-next').disabled = true;
+  setPhase('Recruteur parle');
+  setUserStatus('waiting', '\u00c9coute en cours...');
+
+  // Show question
+  const qText = QUESTIONS[index].q;
+  document.getElementById('question-text').textContent = qText;
+  document.getElementById('recruiter-avatar').classList.add('speaking');
+  document.getElementById('speak-waves').classList.add('active');
+
+  // TTS
+  speakFrench(qText, () => {
+    // TTS done, user's turn
+    document.getElementById('recruiter-avatar').classList.remove('speaking');
+    document.getElementById('speak-waves').classList.remove('active');
+    playDing();
+    setPhase('\u00c0 vous');
+    setUserStatus('listening', 'Parlez maintenant...');
+    document.getElementById('btn-next').disabled = false;
+    document.getElementById('mic-indicator').classList.add('active');
+
+    // Start listening
+    qStartTime = Date.now();
+    qTimerInterval = setInterval(updateQTimer, 1000);
+    startListening();
+  });
+}
+
+function nextQuestion() {
+  // Save results
+  stopListening();
+  clearInterval(qTimerInterval);
+  const duration = Math.round((Date.now() - qStartTime) / 1000);
+  transcripts.push(currentTranscript.trim());
+  durations.push(duration);
+  document.getElementById('mic-indicator').classList.remove('active');
+
+  if (currentQ < 5) {
+    document.getElementById('q-timer').textContent = '00:00';
+    setTimeout(() => askQuestion(currentQ + 1), 800);
+  } else {
+    endInterview();
+  }
+}
+
+function endInterview() {
+  // Save current if still listening
+  if (isListening) {
+    stopListening();
+    clearInterval(qTimerInterval);
+    if (transcripts.length <= currentQ) {
+      const duration = Math.round((Date.now() - qStartTime) / 1000);
+      transcripts.push(currentTranscript.trim());
+      durations.push(duration);
+    }
+  }
+  clearInterval(totalTimerInterval);
+
+  // Stop media
+  if (mediaStream) mediaStream.getTracks().forEach(t => t.stop());
+  if (animFrameId) cancelAnimationFrame(animFrameId);
+  synth.cancel();
+
+  playTone(300, 0.3, 0.08);
+  setTimeout(() => {
+    showScreen('screen-evaluation');
+    renderEvaluation();
+  }, 800);
+}
+
+// ==========================================
+// SPEECH
+// ==========================================
+function speakFrench(text, onEnd) {
+  synth.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'fr-FR';
+  utter.rate = 0.95;
+  utter.pitch = 1.1;
+
+  // Try to find a French female voice
+  const voices = synth.getVoices();
+  const frVoice = voices.find(v => v.lang.startsWith('fr') && v.name.toLowerCase().includes('denise'))
+    || voices.find(v => v.lang.startsWith('fr') && v.name.toLowerCase().includes('hortense'))
+    || voices.find(v => v.lang.startsWith('fr') && (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('julie')))
+    || voices.find(v => v.lang.startsWith('fr'));
+  if (frVoice) utter.voice = frVoice;
+
+  utter.onend = () => { if (onEnd) onEnd(); };
+  // Chrome bug: voices may not be loaded yet
+  if (voices.length === 0) {
+    synth.onvoiceschanged = () => {
+      const v2 = synth.getVoices();
+      const fr2 = v2.find(v => v.lang.startsWith('fr'));
+      if (fr2) utter.voice = fr2;
+      synth.speak(utter);
+    };
+  } else {
+    synth.speak(utter);
+  }
+}
+
+// Preload voices
+if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = () => synth.getVoices();
+synth.getVoices();
+
+// ==========================================
+// SPEECH RECOGNITION
+// ==========================================
+function startListening() {
+  if (!recognition) return;
+  isListening = true;
+  try { recognition.start(); } catch(e) {}
+}
+
+function stopListening() {
+  isListening = false;
+  if (recognition) try { recognition.stop(); } catch(e) {}
+}
+
+// ==========================================
+// AUDIO VISUALIZER
+// ==========================================
+function setupAudioAnalyser(stream) {
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  analyser = audioCtx.createAnalyser();
+  analyser.fftSize = 64;
+  const source = audioCtx.createMediaStreamSource(stream);
+  source.connect(analyser);
+  updateMicBars();
+}
+
+function updateMicBars() {
+  if (!analyser) return;
+  const data = new Uint8Array(analyser.frequencyBinCount);
+  analyser.getByteFrequencyData(data);
+  const bars = document.querySelectorAll('#mic-indicator .bar');
+  const step = Math.floor(data.length / bars.length);
+  bars.forEach((bar, i) => {
+    const val = data[i * step] || 0;
+    const h = Math.max(4, (val / 255) * 28);
+    bar.style.height = h + 'px';
+    bar.style.animation = 'none';
+  });
+  animFrameId = requestAnimationFrame(updateMicBars);
+}
+
+// ==========================================
+// UI CONTROLS
+// ==========================================
+function toggleMic() {
+  isMicMuted = !isMicMuted;
+  const btn = document.getElementById('btn-mic');
+  if (isMicMuted) {
+    btn.classList.add('muted');
+    if (mediaStream) mediaStream.getAudioTracks().forEach(t => t.enabled = false);
+    stopListening();
+  } else {
+    btn.classList.remove('muted');
+    if (mediaStream) mediaStream.getAudioTracks().forEach(t => t.enabled = true);
+    if (qStartTime > 0) startListening();
+  }
+}
+
+function toggleCam() {
+  isCamOn = !isCamOn;
+  const btn = document.getElementById('btn-cam');
+  if (mediaStream) mediaStream.getVideoTracks().forEach(t => t.enabled = isCamOn);
+  document.getElementById('cam-off').style.display = isCamOn ? 'none' : 'flex';
+  document.getElementById('user-cam').style.display = isCamOn ? 'block' : 'none';
+  if (!isCamOn) btn.classList.add('muted');
+  else btn.classList.remove('muted');
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function setPhase(text) {
+  const el = document.getElementById('phase-label');
+  el.textContent = text;
+  if (text === '\u00c0 vous') { el.style.background = 'var(--accent-dim)'; el.style.color = 'var(--accent)'; }
+  else { el.style.background = 'var(--surface-2)'; el.style.color = 'var(--text-2)'; }
+}
+
+function setUserStatus(cls, text) {
+  const el = document.getElementById('user-status');
+  el.className = 'user-status ' + cls;
+  el.textContent = text;
+}
+
+function updateQTimer() {
+  const s = Math.round((Date.now() - qStartTime) / 1000);
+  document.getElementById('q-timer').textContent = fmtTime(s);
+}
+
+function updateTotalTimer() {
+  const s = Math.round((Date.now() - totalStartTime) / 1000);
+  document.getElementById('total-timer').textContent = fmtTime(s);
+}
+
+function fmtTime(s) {
+  const m = Math.floor(s / 60);
+  return String(m).padStart(2,'0') + ':' + String(s % 60).padStart(2,'0');
+}
+
+// ==========================================
+// EVALUATION
+// ==========================================
+function renderEvaluation() {
+  const results = QUESTIONS.map((q, i) => {
+    const transcript = (transcripts[i] || '').toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const dur = durations[i] || 0;
+    const hits = [];
+    const misses = [];
+    q.concepts.forEach(c => {
+      const found = c.triggers.some(t => transcript.includes(
+        t.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      ));
+      if (found) hits.push(c.label);
+      else misses.push(c.label);
+    });
+    const coverage = q.concepts.length > 0 ? Math.round((hits.length / q.concepts.length) * 100) : 0;
+    let timeFeedback = '';
+    if (dur < q.idealMin) timeFeedback = 'Trop court, d\u00e9veloppe davantage';
+    else if (dur > q.idealMax) timeFeedback = 'Un peu long, essaie de synth\u00e9tiser';
+    else timeFeedback = 'Bonne dur\u00e9e';
+    return { hits, misses, coverage, dur, timeFeedback, transcript: transcripts[i] || '' };
+  });
+
+  const avgCoverage = Math.round(results.reduce((a,r) => a + r.coverage, 0) / results.length);
+  const totalDur = durations.reduce((a,d) => a + d, 0);
+  const circumference = 2 * Math.PI * 44;
+
+  let html = `
+    <div class="eval-header fade-in">
+      <div class="eval-title">Entretien termin\u00e9</div>
+      <h1>\u00c9valuation de ta simulation</h1>
+      <div class="score-row">
+        <div class="score-item">
+          <div class="score-ring">
+            <svg viewBox="0 0 100 100">
+              <circle class="bg" cx="50" cy="50" r="44"/>
+              <circle class="fg" cx="50" cy="50" r="44"
+                stroke-dasharray="${circumference}"
+                stroke-dashoffset="${circumference - (circumference * avgCoverage / 100)}"
+                style="stroke:${avgCoverage >= 60 ? 'var(--accent)' : avgCoverage >= 35 ? 'var(--warning)' : 'var(--danger)'}"/>
+            </svg>
+            <div class="value">${avgCoverage}%</div>
+          </div>
+          <div class="score-label">Couverture globale</div>
+        </div>
+      </div>
+      <div class="eval-stats">
+        <div class="stat-chip"><span class="val">${fmtTime(totalDur)}</span><span class="lbl">Dur\u00e9e totale</span></div>
+        <div class="stat-chip"><span class="val">${fmtTime(Math.round(totalDur / 6))}</span><span class="lbl">Moy. / question</span></div>
+        <div class="stat-chip"><span class="val">${results.filter(r => r.coverage >= 50).length}/6</span><span class="lbl">Questions OK</span></div>
+      </div>
+    </div>
+  `;
+
+  results.forEach((r, i) => {
+    const barClass = r.coverage >= 60 ? 'high' : r.coverage >= 35 ? 'mid' : 'low';
+    const timeColor = r.timeFeedback.includes('Bonne') ? 'var(--accent)' : r.timeFeedback.includes('court') ? 'var(--warning)' : 'var(--danger)';
+    html += `
+      <div class="eval-card fade-in" style="animation-delay:${0.1 * (i+1)}s;opacity:0">
+        <div class="eval-card-header">
+          <span class="eval-q-num">Q${i+1}</span>
+          <span class="eval-q-time" style="color:${timeColor}">${fmtTime(r.dur)} - ${r.timeFeedback}</span>
+        </div>
+        <div class="eval-q-title">${QUESTIONS[i].q}</div>
+        <div class="coverage-bar"><div class="fill ${barClass}" style="width:${r.coverage}%"></div></div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          <div class="kw-section" style="flex:1;min-width:200px">
+            <div class="kw-section-title">Points couverts (${r.hits.length})</div>
+            <div class="kw-tags">${r.hits.map(h => `<span class="kw-tag hit">${h}</span>`).join('') || '<span style="color:var(--text-3);font-size:12px">Aucun d\u00e9tect\u00e9</span>'}</div>
+          </div>
+          <div class="kw-section" style="flex:1;min-width:200px">
+            <div class="kw-section-title">Points manqu\u00e9s (${r.misses.length})</div>
+            <div class="kw-tags">${r.misses.map(m => `<span class="kw-tag miss">${m}</span>`).join('') || '<span style="color:var(--accent);font-size:12px">Tout couvert !</span>'}</div>
+          </div>
+        </div>
+        ${r.transcript ? `
+          <button class="btn-transcript-toggle" onclick="this.nextElementSibling.classList.toggle('show')">Voir la transcription</button>
+          <div class="eval-transcript">"${r.transcript}"</div>
+        ` : ''}
+      </div>
+    `;
+  });
+
+  // Global tips
+  const weakest = results.reduce((min, r, i) => r.coverage < results[min].coverage ? i : min, 0);
+  const strongest = results.reduce((max, r, i) => r.coverage > results[max].coverage ? i : max, 0);
+  html += `
+    <div class="eval-card fade-in" style="animation-delay:0.8s;opacity:0;border-color:var(--accent)">
+      <div class="eval-q-title">Bilan</div>
+      <div class="eval-feedback">
+        <strong>Point fort :</strong> Question ${strongest+1} (${results[strongest].coverage}% de couverture).<br>
+        <strong>\u00c0 travailler :</strong> Question ${weakest+1} (${results[weakest].coverage}% de couverture).<br><br>
+        ${avgCoverage >= 70 ? "Excellente pr\u00e9paration ! Tu couvres bien les points cl\u00e9s. Continue comme \u00e7a pour l'entretien." :
+          avgCoverage >= 45 ? "Bonne base mais il manque des \u00e9l\u00e9ments cl\u00e9s. Relis les bullet points du PDF pour les questions faibles." :
+          "Il faut retravailler les r\u00e9ponses. Relis attentivement les bullet points et les r\u00e9ponses pr\u00e9par\u00e9es avant l'entretien."}
+        <br><br>
+        <em>Rappel : la reconnaissance vocale ne d\u00e9tecte pas toujours tous les mots. Si tu as bien dit quelque chose et que c'est marqu\u00e9 \"manqu\u00e9\", c'est peut-\u00eatre une erreur de transcription.</em>
+      </div>
+    </div>
+  `;
+
+  html += `
+    <div class="eval-actions fade-in" style="animation-delay:1s;opacity:0">
+      <button onclick="location.reload()">Recommencer la simulation</button>
+      <button class="primary" onclick="window.open('entretien-14h.html','_blank')">Ouvrir le m\u00e9mo PDF</button>
+    </div>
+  `;
+
+  document.getElementById('eval-container').innerHTML = html;
+
+  // Animate coverage bars
+  setTimeout(() => {
+    document.querySelectorAll('.coverage-bar .fill').forEach(el => {
+      el.style.width = el.style.width;
+    });
+  }, 100);
+}
+
+// ==========================================
+// RESTART
+// ==========================================
+function restartSimulation() {
+  location.reload();
+}
+</script>
+</body>
+</html>
