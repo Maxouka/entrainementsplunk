@@ -289,17 +289,19 @@ const hrData = {
       number: 1,
       q: "Qu'avez-vous appris par vous-même lors de vos différentes missions, sans que cela soit demandé par votre management ?",
       why: "Ils testent ton INITIATIVE et ta CURIOSITÉ. C'est LA question qui sépare les passionnés des exécutants. Ils veulent voir que tu ne fais pas juste ce qu'on te demande.",
-      answer: `Le plus gros exemple, c'est l'environnement de test PRTG. Chez Harvest on avait PRTG en production avec des milliers de sondes sur plus de 1000 machines, mais il n'y avait aucun environnement de test. Quand il fallait déployer de nouvelles sondes ou tester des configurations, on le faisait directement en prod, ce qui était risqué. De ma propre initiative, j'ai installé un serveur PRTG de test en local, j'ai monté des VMs de test qui n'existaient pas, et j'ai développé et validé des déploiements de sondes via l'API PRTG et Ansible avant de les pousser en production. Personne ne me l'avait demandé, j'ai juste vu que ça manquait et que ça nous faisait prendre des risques inutiles.
+      answer: `Ce que j'ai le plus appris par moi-même, c'est à prendre des initiatives quand une tâche peut être optimisée.
 
-Deuxième exemple : pendant le déploiement BitLocker en urgence après le vol du PC d'un cadre, j'ai découvert que les clés de récupération du disque D ne remontaient pas dans l'Active Directory. Ça bloquait les utilisateurs et personne n'avait de solution immédiate. J'ai pris l'initiative de développer un script PowerShell d'auto-unlock et de récupérer manuellement les clés dans les logs Tanium pour dépanner les utilisateurs bloqués. C'était pas prévu, j'ai vu le problème en cours de route et j'ai agi.
+Exemple concret : on m'a demandé d'installer manuellement des sondes PRTG sur des machines virtuelles hors couverture de monitoring. C'était une tâche répétitive sur plus de 100 VM. Plutôt que de le faire à la main, j'ai pris le temps d'apprendre Ansible par moi-même pour automatiser le déploiement. J'ai scripté en PowerShell via l'API de PRTG pour déposer les sondes, et utilisé Ansible pour modifier les configurations sur chaque machine au préalable.
 
-Et aujourd'hui, je me forme à Splunk en autonomie complète alors que chez Harvest j'utilisais Rapid7 InsightIDR. J'ai construit un environnement d'entraînement avec des exercices SPL, des scénarios de lecture de logs, des quiz techniques. Personne ne me le demande, je le fais parce que je sais que Splunk est le standard en SOC et que c'est ce que vous utilisez ici.`,
-      tips: "3 exemples avec la structure Constat → Initiative → Résultat. Le PRTG de test est le meilleur : il montre que tu améliores les process. Le BitLocker montre que tu gères la pression. Le Splunk montre que tu anticipes ta carrière. Les 3 ensemble = profil complet.",
+Et surtout, comme je débutais sur ces outils, j'ai eu le réflexe de monter un environnement de test en local : un serveur PRTG de test, des VM de test, pour valider ma solution avant de la proposer. La solution a été retenue et utilisée en production.
+
+L'autre chose que j'ai apprise par curiosité, c'est la prise en main du SIEM. Mon poste était orienté sécurité opérationnelle : hardening, conformité ISO 27001, veille, patch management. Mais on travaillait en proximité avec la SSI qui gérait le SIEM. J'ai demandé à avoir accès, ils nous ont formés et laissé traiter des alertes non complexes. C'est cette curiosité pour le côté investigation qui m'a donné envie d'en faire mon métier.`,
+      tips: "Commence par l'exemple Ansible/PRTG (c'est le plus fort), le SIEM garde-le plus court comme deuxième couche. Ne dis pas 'monotone/chiant', dis 'répétitif' ou 'optimisable'. Structure naturelle : initiative + rigueur (env de test) + curiosité (SIEM).",
       keyPoints: [
-        "Env de test PRTG + Ansible + API = initiative process la plus forte",
-        "Script auto-unlock BitLocker = résolution sous pression",
-        "Splunk en auto-formation = anticipation concrète du poste visé",
-        "Structure : Constat → Initiative → Résultat pour chaque exemple",
+        "Ansible + PRTG + API sur 100+ VM = initiative concrète avec chiffres",
+        "Environnement de test en local = rigueur et prudence",
+        "Solution retenue et utilisée en production = résultat tangible",
+        "SIEM par curiosité = transition naturelle vers le SOC",
         "Tout est VRAI et vérifiable"
       ]
     },
@@ -307,42 +309,41 @@ Et aujourd'hui, je me forme à Splunk en autonomie complète alors que chez Harv
       number: 2,
       q: "Si on vous avait donné carte blanche, quel est le premier point que vous auriez amélioré dans votre dernière mission ?",
       why: "Ils testent ta VISION CRITIQUE et ta capacité à prendre du recul. Attention : ne pas taper sur l'ex-employeur, mais montrer une réflexion constructive.",
-      answer: `Le premier point, c'est la centralisation de la supervision sécurité. Chez Harvest, on avait plusieurs outils en parallèle (InsightIDR comme SIEM, Cybereason en EDR, PRTG pour le monitoring infra, et les alertes Waycom) mais il n'y avait pas de corrélation réelle entre ces sources. Chaque outil remontait ses alertes dans son coin. Si j'avais eu carte blanche, j'aurais poussé pour centraliser tout ça dans un SIEM unique avec des règles de corrélation. Par exemple, quand PRTG détecte un pic CPU anormal sur un serveur ET que Cybereason remonte un processus suspect sur le même serveur, aujourd'hui ce sont deux alertes séparées. Corrélées, c'est un incident.
+      answer: `Si j'avais eu carte blanche, j'aurais automatisé le processus de veille vulnérabilités.
 
-Le deuxième point, c'est l'automatisation de la conformité. Une grosse partie de mon travail (vérifier les mots de passe expirés dans l'AD, identifier les machines sans BitLocker, lister les protocoles obsolètes) je le faisais avec des scripts PowerShell et des exports CSV manuels. Si j'avais eu carte blanche, j'aurais mis en place un dashboard de conformité en temps réel qui remonte automatiquement l'état du parc : couverture BitLocker, état des patchs, protocoles obsolètes restants. Ça aurait transformé le rapport COMEX hebdomadaire en quelque chose de dynamique plutôt que des fichiers Excel compilés à la main.
+Chaque semaine, je devais passer plusieurs heures à éplucher manuellement les bulletins du CERT, vérifier pour chaque CVE si elle concernait un outil de notre parc, comparer les versions pour savoir si on était impacté, puis créer les fiches Jira une par une. Tout ça alimentait un rapport hebdomadaire présenté au COMEX et au comité de sécurité.
 
-Et enfin, la documentation des procédures de réponse. On avait des connaissances dans les têtes de chacun, mais pas assez de procédures écrites et formalisées. Quand j'étais d'astreinte le week-end et que je tombais sur un type d'alerte que je n'avais pas encore vu, je devais appeler un collègue. Des playbooks documentés (même basiques) auraient accéléré le traitement.`,
-      tips: "Rester HONNÊTE : tu ne faisais pas du SOC pur, tu faisais de l'infra sécurité et de la conformité. Mais tu peux quand même montrer de la vision. Le mot 'corrélation' et 'centralisation' montrent que tu comprends la logique SOC même si tu ne l'as pas pratiquée au quotidien.",
+Ce que j'aurais aimé construire, c'est un système qui croise automatiquement les bulletins CERT avec notre inventaire d'assets et de versions. A chaque nouvelle publication, il détecte ce qui nous concerne, flag les versions impactées, et pré-génère les fiches. Le rapport serait alimenté automatiquement avec les données complémentaires comme l'état des sauvegardes.
+
+Aujourd'hui avec l'IA et les outils disponibles, c'est tout à fait faisable. C'est le genre de tâche répétitive à forte valeur ajoutée qui mérite d'être automatisée pour que l'analyste se concentre sur l'analyse et la remédiation plutôt que sur la collecte.`,
+      tips: "Ne dis pas 'c'était relou', dis 'chronophage' ou 'ça prenait un temps disproportionné par rapport à la valeur'. Insiste sur le fait que tu aurais voulu le faire mais le temps manquait, ça montre de la frustration constructive. Tu montres un vrai pain point opérationnel, pas un truc vague.",
       keyPoints: [
-        "Centralisation des alertes multi-outils = vision SOC réaliste",
-        "Dashboard de conformité temps réel = amélioration de ce que tu faisais VRAIMENT",
-        "Playbooks documentés = besoin réel vécu lors des astreintes week-end",
-        "Pas de critique, du constructif basé sur le vécu",
-        "Tout est ancré dans ton VRAI travail, pas inventé"
+        "Veille CERT manuelle = pain point concret et identifiable",
+        "Chaîne complète : CERT → CVE → versions → Jira → rapport COMEX",
+        "Solution proposée réaliste : croisement automatique assets/bulletins",
+        "Mention de l'IA pertinente et naturelle ici",
+        "Mindset d'optimisation = exactement ce qu'un SOC recherche"
       ]
     },
     {
       number: 3,
       q: "Pourquoi avez-vous choisi la cybersécurité ? Qu'est-ce qui vous motive dans ce domaine ?",
-      why: "ATTENTION : ils vont CHALLENGER ta sincérité. Si tu dis 'je suis passionné', ils vont creuser avec des exemples concrets (CTF, projets perso, veille, etc.). Sois AUTHENTIQUE. Si tu ne fais pas de CTF, ne mens pas, parle de ce que tu fais vraiment.",
-      answer: `Ce qui m'a amené à la cybersécurité, c'est un chemin assez naturel. Je suis très actif dans l'écosystème crypto et blockchain (Solana, DeFi, trading on-chain) et c'est là que j'ai compris viscéralement ce que c'est la cybersécurité. En crypto, le facteur d'attaque numéro 1 c'est l'humain. Exactement comme en cybersécurité d'entreprise. Les gens se font drain leur wallet pas par une faille technique dans la blockchain, mais par du social engineering : un faux site de mint, un lien Discord malveillant, une approval de smart contract piégée. C'est du phishing, c'est de la manipulation. C'est exactement les mêmes mécaniques qu'on retrouve dans les alertes d'un SOC. Le vecteur change, mais l'attaque est la même : exploiter la confiance humaine.
+      why: "ATTENTION : ils vont CHALLENGER ta sincérité. Si tu dis 'je suis passionné', ils vont creuser avec des exemples concrets (CTF, projets perso, veille, etc.). Sois AUTHENTIQUE. Ne surjoue pas la passion, reste naturel.",
+      answer: `J'ai grandi dans le numérique et les jeux vidéo, donc l'informatique c'était le chemin naturel. C'est à l'INSA pendant les cours de cybersécurité que le déclic s'est fait.
 
-Et ça m'a appris à analyser des transactions, tracer des flux, identifier des patterns suspects. C'est fondamentalement le même travail qu'un analyste SOC qui lit des logs et pivote d'un indice à l'autre. En crypto tu traces un wallet malveillant à travers les transactions, en SOC tu traces une IP suspecte à travers les logs. La logique d'investigation est identique.
+Ce qui me motive, c'est plusieurs choses. D'abord le côté investigation. Quand j'ai pu toucher au SIEM chez Harvest par curiosité, j'ai retrouvé ce que j'aime : comprendre ce qui s'est passé, remonter un fil, c'est comme un escape game ou une enquête. C'est stimulant intellectuellement. Et c'est justement ce que je ne retrouvais pas assez dans mon rôle précédent qui était plus orienté conformité.
 
-Ensuite, chez Harvest, j'ai découvert l'autre côté : la sécurité opérationnelle à l'échelle d'une entreprise. Sécuriser 1000 machines, déployer BitLocker en urgence après un vol de PC, préparer un audit ISO 27001, rédiger des rapports de vulnérabilités pour le COMEX. C'est une base solide en hardening et conformité, et maintenant je veux aller vers la détection et l'investigation, c'est pour ça que je vise un poste SOC.
+Ensuite, c'est un domaine qui ne stagne jamais. L'intersection avec l'IA par exemple me fascine autant qu'elle m'inquiète. On voit que les attaques évoluent, que les fuites de données deviennent régulières, et je trouve qu'il y a un vrai sens à protéger les gens dans ce contexte.
 
-L'autre sujet qui me passionne et sur lequel je fais une veille très active, c'est l'intersection entre cybersécurité et IA. C'est en train de tout changer. Côté attaquant : du phishing généré par IA quasi indétectable, du malware polymorphe qui se réécrit à chaque exécution, de la reconnaissance automatisée. Côté défense : l'IA va accélérer le triage des alertes, la corrélation, la détection comportementale. Pour un SOC, ça veut dire que les règles de détection statiques ne suffiront plus, il faudra de l'analyse comportementale. Et moi j'utilise déjà l'IA au quotidien comme outil de productivité. Claude Code pour me former à Splunk, comprendre des techniques d'attaque, monter en compétences.
-
-Je fais pas de CTF le week-end, je ne vais pas mentir. Mais ma passion pour la crypto et l'IA me pousse naturellement à comprendre les mécaniques d'attaque, à analyser des flux, à faire de la veille sur les nouvelles menaces. C'est pas du SOC sur mon temps libre, mais c'est la même curiosité et le même réflexe d'investigation, et c'est ce qui me motive à faire ce métier.`,
-      tips: "C'est ta VRAIE histoire, crypto → cyber → SOC. Le lien social engineering crypto/phishing SOC est puissant et original. L'IA c'est ta deuxième passion. Et tu assumes de pas faire de CTF, c'est honnête et ça tient la route parce que tu as d'autres activités concrètes qui prouvent ta curiosité.",
+Pour être honnête, je ne suis pas un acharné de CTF. J'en fais quand le thème m'accroche, par exemple un CTF sur le thème Resident Evil, c'est fun. Mais ce qui me drive au quotidien c'est plus le côté défense et utilité concrète que le côté compétition.`,
+      tips: "C'est ta VRAIE histoire : jeux vidéo → INSA → déclic → investigation. L'honnêteté sur les CTF est ta meilleure arme. Si le recruteur challenge ('mais vous faites quoi en CTF ?'), réponds : 'Mon côté investigation, je le pratique autrement : en crypto je trace des wallets sur Solscan et Etherscan, c'est de l'OSINT blockchain. Et chez Harvest j'ai demandé à accéder au SIEM par curiosité.' C'est le moment de glisser l'OSINT naturellement.",
       keyPoints: [
-        "Crypto : facteur d'attaque #1 = l'humain (comme en cyber entreprise)",
-        "Tracer un wallet malveillant ≈ pivoter sur une IP suspecte dans un SIEM",
-        "Harvest = base solide en infra sécurité, maintenant transition vers SOC",
-        "Veille IA + cyber = passion authentique, pas du bluff",
-        "IA offensive (phishing, polymorphe) et défensive (triage, comportemental)",
-        "Utilisation concrète de l'IA (Claude Code) au quotidien",
-        "Pas de CTF et c'est assumé, la crypto et l'IA = sa vraie curiosité"
+        "Parcours naturel : jeux vidéo → INSA → déclic cyber",
+        "Investigation = escape game, stimulant intellectuellement",
+        "Harvest trop orienté conformité, veut du dynamique",
+        "IA x cyber = intersection qui fascine et inquiète",
+        "CTF assumé : pas un acharné mais curieux quand le thème accroche",
+        "Si challenge CTF → pivoter sur crypto/OSINT blockchain (Solscan, Etherscan)"
       ]
     },
     {
@@ -425,63 +426,121 @@ Tu dis :
 2. Sur le hostname cible, qu'est-ce qui s'est passé sur cette machine après le login ?
 3. Threat intel, je vérifierais cette IP sur VirusTotal ou AbuseIPDB."
 
-Note : les logs dans un SIEM comme Splunk ne sont PAS brutes, elles sont parsées avec des champs nommés (src_ip, Account_Name, etc.). Tu travailles avec un tableau propre, pas du XML illisible.`,
-      tips: "Le PIVOT est plus important que la lecture initiale, c'est ce qui sépare un junior qui fait du bruit d'un analyste qui investigue. Même si tu ne reconnais pas un EventCode, montre ta méthodologie de pivot. Utilise les mots : 'pivoter sur', 'corréler', 'timeline', 'threat intel'. Si tu ne sais pas → dis-le honnêtement et montre comment tu chercherais.",
+Note : les logs dans un SIEM comme Splunk ne sont PAS brutes, elles sont parsées avec des champs nommés (src_ip, Account_Name, etc.). Tu travailles avec un tableau propre, pas du XML illisible.
+
+══════════════════════════════════════════
+CAS CONCRET 2 : SQL INJECTION (logs web)
+══════════════════════════════════════════
+
+185.43.12.8 - - [25/Feb/2026:14:22:01] "GET /search?q=test' OR 1=1-- HTTP/1.1" 200 4532
+185.43.12.8 - - [25/Feb/2026:14:22:03] "GET /search?q=test' UNION SELECT username,password FROM users-- HTTP/1.1" 200 8921
+185.43.12.8 - - [25/Feb/2026:14:22:05] "GET /search?q=test' UNION SELECT credit_card,cvv FROM payments-- HTTP/1.1" 200 12340
+
+Tu dis :
+"Je vois des requêtes GET depuis la même IP avec des payloads SQL injection dans le paramètre de recherche. Le premier test avec OR 1=1 c'est une vérification classique que l'injection fonctionne. Ensuite l'attaquant tente des UNION SELECT pour exfiltrer la table users puis payments.
+
+Ce qui m'inquiète c'est que les réponses retournent des tailles croissantes (4K, 8K, 12K), ce qui suggère que l'injection fonctionne et que des données sont retournées.
+
+Pivots : je vérifie cette IP source, je regarde tous les endpoints qu'elle a ciblés, je contacte l'équipe applicative pour confirmer la vulnérabilité et bloquer l'IP au WAF. Je vérifie aussi si les données exfiltrées contiennent de vrais records (incident data breach potentiel)."
+
+Requête Splunk :
+index=web sourcetype=access_combined src_ip="185.43.12.8"
+| where like(uri_query, "%UNION%") OR like(uri_query, "%OR 1=1%")
+| table _time, src_ip, uri_path, uri_query, status, bytes
+
+══════════════════════════════════════════
+CAS CONCRET 3 : EXÉCUTION SUSPECTE WINDOWS (Sysmon/EDR)
+══════════════════════════════════════════
+
+EventCode=1 ParentImage="C:\\Windows\\System32\\cmd.exe"
+Image="C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+CommandLine="powershell -enc aQBlAHgAIAAoAG4AZQB3AC0AbwBiAGoAZQBjAHQAIABuAGUAdAA..."
+User="CORP\\j.dupont"
+
+EventCode=3 Image="powershell.exe"
+DestinationIp="91.234.56.78" DestinationPort=443
+
+Tu dis :
+"Je vois un événement Sysmon de création de processus : cmd.exe lance PowerShell avec un argument encodé en base64 (-enc). C'est un indicateur classique d'exécution malveillante, les attaquants encodent pour bypasser la détection.
+
+Juste après, ce même PowerShell établit une connexion sortante vers une IP externe sur le port 443. Ca ressemble fortement à du téléchargement de payload ou à une communication C2 (Command & Control).
+
+Pivots : je décode le base64 pour voir la commande réelle. Je vérifie la réputation de l'IP 91.234.56.78. Je pivote sur le user j.dupont pour comprendre comment il en est arrivé là (phishing ? document malveillant ?). Je cherche le parent process de cmd.exe pour remonter la chaîne. Et je vérifie si d'autres machines contactent cette même IP."
+
+Requête Splunk :
+index=windows sourcetype=sysmon EventCode=1 CommandLine="*powershell*-enc*"
+| table _time, Computer, User, ParentImage, Image, CommandLine
+
+══════════════════════════════════════════
+VOCABULAIRE CLÉ À PLACER NATURELLEMENT
+══════════════════════════════════════════
+
+• IOC (Indicator of Compromise) : IP, hash, domaine, URL malveillante
+• Pivoter : partir d'un élément pour en découvrir d'autres liés
+• Chaîne d'exécution (process tree) : qui a lancé quoi
+• Mouvement latéral : l'attaquant se déplace d'une machine à une autre
+• C2 (Command & Control) : communication entre malware et serveur attaquant
+• LOLBins : outils légitimes Windows utilisés par les attaquants (powershell, certutil, mshta)
+• TTPs : Tactiques, Techniques, Procédures (référence MITRE ATT&CK)
+• Triage : évaluer rapidement la criticité d'une alerte`,
+      tips: "Le PIVOT est plus important que la lecture initiale, c'est ce qui sépare un junior qui fait du bruit d'un analyste qui investigue. Même si tu ne reconnais pas un EventCode, montre ta méthodologie de pivot. Utilise les mots : 'pivoter sur', 'corréler', 'timeline', 'threat intel'. Si tu ne sais pas, dis-le honnêtement et montre comment tu chercherais. Prends 5 secondes pour observer avant de parler.",
       keyPoints: [
         "PIVOT = rebondir d'indice en indice (IP → hostname → user → hash)",
         "Parler de pivot APRÈS la description des logs ('et ensuite je pivoterais sur...')",
         "5 codes : 4624 (login OK), 4625 (échec), 4672 (admin), 7045 (service), 1102 (logs effacés)",
-        "Si tu connais pas le code → lis le message à côté, c'est pas grave",
-        "Les logs SIEM sont parsées, pas brutes, tu lis des champs nommés",
+        "3 cas concrets : Brute Force SSH, SQL Injection, Sysmon C2",
+        "Vocabulaire : IOC, pivoter, chaîne d'exécution, mouvement latéral, C2, LOLBins, TTPs, triage",
+        "Si tu connais pas le code, lis le message à côté, c'est pas grave",
         "Toujours proposer au moins 3 pivots concrets"
       ]
     },
     {
       number: 5,
       q: "Quel est votre point de vue sur l'IA et l'utilisez-vous aujourd'hui ? Si oui, pourquoi ?",
-      why: "Question moderne et clivante. Ils veulent voir si tu es un early adopter pragmatique, pas un hater ni un fanboy. PARFAIT pour ton profil, tu utilises Claude Code quotidiennement !",
-      answer: `Oui, j'utilise l'IA au quotidien et je pense que c'est un levier énorme pour un analyste SOC, à condition de l'utiliser intelligemment.
+      why: "Question moderne et clivante. Ils veulent voir si tu es un early adopter pragmatique, pas un hater ni un fanboy. PARFAIT pour ton profil, tu utilises Claude Code quotidiennement et tu as des projets concrets !",
+      answer: `Je suis très favorable à l'IA et je l'utilise au quotidien. Pour moi c'est un amplificateur : gain de temps, gain de créativité, et surtout un accélérateur d'apprentissage. Evidemment avec des précautions, notamment en contexte professionnel, ne jamais y injecter de données confidentielles, privilégier des modèles locaux quand c'est nécessaire. Le facteur humain reste central, l'IA assiste mais ne remplace pas.
 
-Concrètement, j'utilise Claude Code (l'assistant IA d'Anthropic) comme outil de développement et d'apprentissage technique. Par exemple, quand je me forme à Splunk, je l'utilise pour comprendre des requêtes SPL complexes, me faire expliquer des concepts d'architecture, ou valider ma compréhension d'une technique d'attaque. C'est comme avoir un collègue senior disponible 24h/24 pour du pair-learning.
+Concrètement, j'utilise des outils comme Claude Code au quotidien et je fais beaucoup de veille sur les nouveaux modèles et les nouvelles pratiques pour en tirer le maximum.
 
-Pour la cybersécurité spécifiquement, je vois l'IA comme un multiplicateur de force à plusieurs niveaux :
+Pour donner des exemples concrets de ce que ça m'a permis de réaliser :
 
-En défense, l'IA peut accélérer le triage des alertes. Imaginez un premier filtre intelligent qui pré-qualifie les alertes en enrichissant automatiquement le contexte, qui corrèle avec la threat intelligence, et qui priorise pour l'analyste. Ça ne remplace pas le jugement humain, mais ça réduit considérablement le temps de traitement des faux positifs.
+D'abord un SaaS complet, trouverunprof.com, une plateforme de mise en relation entre professeurs et étudiants. Ma fiancée donne des cours particuliers via une plateforme qui prend des frais excessifs, donc j'ai construit une alternative de A à Z : système d'authentification multi-rôles (parent, élève, professeur), calendrier de réservation, notifications et rappels, et même l'intégration d'un système de paiement par carte bancaire avec un système de crédits. Le tout en faisant attention à la sécurisation des données et des transactions.
 
-En investigation, l'IA aide à analyser rapidement de gros volumes de logs, détecter des patterns anormaux qu'un humain mettrait des heures à repérer, ou résumer un incident complexe pour le reporting.
+Ensuite, plus récemment, un outil d'automatisation de recherche d'emploi en local : scraping d'offres, analyse de compatibilité intelligente, génération de CV adaptés non pas sur le contenu mais sur l'angle d'approche et les mots-clés mis en avant, et un tableau de suivi avec filtres. J'en ai d'ailleurs fait un case study documenté si ça vous intéresse.
 
-Côté attaquants, il faut être lucide : l'IA est aussi utilisée pour générer du phishing plus convaincant, automatiser la reconnaissance, ou créer du code malveillant polymorphe. C'est une course aux armements.
-
-Mon point de vue : un analyste SOC qui n'utilise pas l'IA en 2026 se prive d'un avantage compétitif. Mais l'IA ne remplace pas la compréhension fondamentale, il faut d'abord comprendre les concepts pour pouvoir évaluer et challenger ce que l'IA propose. C'est un copilote, pas un autopilote.`,
-      tips: "Être enthousiaste mais nuancé. Montrer une utilisation CONCRÈTE (Claude Code, pas juste ChatGPT pour des résumés). Montrer qu'on comprend les implications offensives et défensives. Le mot-clé : 'multiplicateur de force'. Ne pas avoir peur de dire qu'on l'utilise, c'est un PLUS en 2026.",
+Pour le lien avec la cybersécurité, c'est ce qui me passionne : l'intersection IA et cyber. Côté attaquant, l'IA va permettre des attaques plus sophistiquées et surtout massifiées. Côté défenseur, on n'aura pas le choix, il faudra utiliser l'IA pour détecter les patterns et anticiper. C'est un sujet sur lequel je compte me former activement.`,
+      tips: "Ne mentionne PAS le prix (100$/mois), c'est un détail inutile. Le case study PDF, propose-le naturellement mais ne force pas. Le mot 'amplificateur' est clé : ça montre que TU restes maître. Si le recruteur demande 'mais ça ne vous fait pas peur pour l'emploi ?' : 'Au contraire, ceux qui maîtrisent l'IA auront un avantage, c'est pour ça que j'investis du temps dessus.'",
       keyPoints: [
-        "Utilisation quotidienne concrète (Claude Code pour le dev et l'apprentissage)",
-        "Application SOC : triage, corrélation, analyse de volumes",
-        "Conscience du côté offensif (phishing IA, malware polymorphe)",
-        "Nuance : copilote, pas autopilote, le jugement humain reste essentiel",
-        "Power user = early adopter = profil moderne et adaptable"
+        "Amplificateur, pas remplacement, le facteur humain reste central",
+        "Précaution données confidentielles = réflexe sécu parfait pour le poste",
+        "SaaS trouverunprof.com = projet concret livré (auth, paiement, calendrier)",
+        "Outil recherche d'emploi = mindset d'automatisation (ce qu'un SOC veut)",
+        "Vision IA x cyber = réflexion stratégique sur le futur du métier",
+        "Case study disponible si le recruteur veut creuser"
       ]
     },
     {
       number: 6,
       q: "Avez-vous des hobbies ou activités personnelles qui vous servent dans votre travail ? Pouvez-vous donner un exemple ?",
-      why: "Ils veulent voir ta PERSONNALITÉ et si ta passion dépasse le cadre pro. C'est aussi un test de communication, arrive-t-on à rendre un hobby intéressant dans un contexte pro ?",
-      answer: `Oui, clairement. Mon intérêt pour la blockchain et l'écosystème Solana, par exemple, m'a apporté des compétences directement transférables en cybersécurité.
+      why: "Ils veulent voir ta PERSONNALITÉ et si ta passion dépasse le cadre pro. C'est aussi un test de communication. C'est LE moment de parler crypto/OSINT naturellement pour connecter avec le recruteur OSINT.",
+      answer: `Mon principal hobby c'est de construire des solutions concrètes pour résoudre des problèmes autour de moi. Je vais voir mes proches, je leur demande quel problème ils aimeraient automatiser, et je le construis. C'est comme ça qu'est né trouverunprof.com pour ma fiancée, ou l'outil de recherche d'emploi. C'est un hobby qui rejoint directement le métier : identifier un besoin, concevoir une solution, la livrer.
 
-Depuis plusieurs années, je suis actif dans l'écosystème DeFi, les échanges décentralisés, le trading on-chain, les NFTs. Ça peut sembler éloigné du SOC, mais en pratique ça m'a obligé à comprendre en profondeur les mécanismes de sécurité des transactions, les attaques sur les smart contracts, les techniques de MEV (extraction de valeur par manipulation de l'ordre des transactions). J'ai même développé un toolkit en Rust et TypeScript pour analyser des transactions Solana.
+L'autre activité qui me sert énormément, c'est la blockchain et la DeFi. Je suis très actif dans cet écosystème et honnêtement, c'est un terrain d'entraînement à la sécurité en conditions réelles. En DeFi, les tentatives d'attaque sont permanentes : drains de wallets, phishing ciblé, faux smart contracts. Les gens attaquent pour accéder directement à ton argent, donc l'enjeu est immédiat. Ca m'a rendu très vigilant sur tout ce que j'approuve, chaque transaction, chaque signature. D'ailleurs je stocke mes cryptos sur des cold wallets physiques. En DeFi, la sécurité de ses propres assets c'est la base : clés privées hors ligne, séparation des wallets, vérification de chaque transaction avant signature. C'est de la hygiène de sécurité appliquée à mes propres finances.
 
-Ce que ça m'apporte concrètement en cybersécurité : une compréhension fine des protocoles, une habitude d'analyser des transactions et des flux de données, qui est exactement ce qu'on fait avec des logs, et une sensibilité aux nouvelles surfaces d'attaque liées aux crypto-actifs. Aujourd'hui, beaucoup d'entreprises ont des actifs numériques ou des employés qui utilisent des wallets, et c'est un vecteur d'attaque de plus en plus exploité.
+Concrètement ça m'amène à tracer des wallets sur Solscan et Etherscan, suivre des flux de transactions, et parfois quand j'ai besoin de savoir à qui appartient un portefeuille, je fais de la corrélation entre des comptes Twitter et des adresses crypto. C'est de l'OSINT appliqué à la blockchain.
 
-L'autre hobby, c'est le développement. Mon projet TeachMe, une marketplace de cours particuliers que j'ai construite seul, me sert au quotidien. En développant une application complète avec authentification, paiements Stripe, messagerie temps réel, j'ai dû penser sécurité à chaque étape : protection CSRF, Content Security Policy, validation côté serveur, gestion des sessions. Quand j'analyse une alerte web en SOC, je comprends ce qui se passe côté applicatif parce que je l'ai construit moi-même.
+L'état d'esprit c'est exactement le même qu'en SOC : être vigilant en permanence, analyser ce qu'on voit, pivoter d'un élément à l'autre pour remonter une piste. Sauf qu'en DeFi, c'est mon propre argent qui est en jeu, donc la motivation à être rigoureux est maximale.
 
-Et enfin, le sport m'aide à gérer le stress et à rester concentré sur de longues sessions d'investigation. C'est basique mais c'est réel.`,
-      tips: "Rendre le hobby CONCRET et lié au métier. La blockchain est un super différenciateur, très peu d'analystes SOC ont cette compétence. Le dev comme hobby montre la polyvalence. Le sport = gestion du stress = pertinent pour le SOC. Être authentique et passionné.",
+Sinon côté physique, la musculation régulièrement, ça aide à garder la clarté mentale pour un travail d'analyse.`,
+      tips: "N'oublie JAMAIS la crypto, c'est ta réponse la plus puissante. 'Terrain d'entraînement en conditions réelles' transforme un hobby en expérience de sécurité. La corrélation Twitter/wallet = OSINT que le recruteur va adorer. 'C'est mon propre argent' prouve que ta vigilance est sincère. Si le recruteur rebondit sur l'OSINT : 'En DeFi on fait de l'OSINT en permanence sans forcément le nommer. Tracer un wallet, corréler une adresse avec une identité, c'est le même réflexe que d'enrichir un IOC en SOC.'",
       keyPoints: [
-        "Blockchain/Solana = compréhension des protocoles et analyse de transactions",
-        "Toolkit Rust/TypeScript = preuves concrètes de compétence technique",
-        "TeachMe = sécurité applicative vue du développeur",
-        "Sport = gestion du stress (pertinent pour le SOC)",
-        "Chaque hobby est connecté au métier avec un exemple concret"
+        "Builder = profil proactif et débrouillard (trouverunprof.com, outil emploi)",
+        "Blockchain/DeFi = terrain d'entraînement sécurité en conditions réelles",
+        "Cold wallet physique = hygiène de sécurité appliquée à soi-même",
+        "Traçabilité wallets + corrélation Twitter = OSINT blockchain naturel",
+        "Vocabulaire SOC naturel : pivoter, remonter une piste, investigation",
+        "Si rebond OSINT → 'enrichir un IOC en SOC = même démarche'",
+        "Musculation = clarté mentale pour l'analyse"
       ]
     }
   ],
