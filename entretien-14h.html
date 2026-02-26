@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Entretien Sopra Steria - 6 Questions RH</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; color: #1a1a2e; line-height: 1.6; padding: 40px; max-width: 900px; margin: 0 auto; }
+    h1 { text-align: center; color: #0f3460; font-size: 22px; margin-bottom: 4px; }
+    .subtitle { text-align: center; color: #666; font-size: 13px; margin-bottom: 30px; }
+    .question-block { margin-bottom: 28px; page-break-inside: avoid; }
+    .q-header { background: #0f3460; color: #fff; padding: 10px 16px; border-radius: 8px 8px 0 0; font-size: 14px; font-weight: 600; }
+    .q-header span.num { background: #e94560; padding: 2px 10px; border-radius: 4px; margin-right: 10px; font-size: 13px; }
+    .q-body { border: 1px solid #ddd; border-top: none; border-radius: 0 0 8px 8px; padding: 16px; background: #fafbfc; }
+    .answer { font-size: 13.5px; white-space: pre-line; margin-bottom: 12px; }
+    .tips { background: #fff3cd; border-left: 4px solid #ffaa00; padding: 10px 14px; font-size: 12.5px; margin-top: 10px; border-radius: 0 6px 6px 0; }
+    .tips strong { color: #856404; }
+    .keypoints { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .kp { background: #e8f4fd; color: #0f3460; padding: 4px 10px; border-radius: 12px; font-size: 11.5px; border: 1px solid #b8daff; }
+    .bullets { background: #edf7ed; border-left: 4px solid #28a745; padding: 10px 14px; margin-bottom: 12px; border-radius: 0 6px 6px 0; }
+    .bullets strong { color: #155724; font-size: 13px; }
+    .bullets ul { margin: 6px 0 0 16px; font-size: 13px; }
+    .bullets li { margin-bottom: 3px; }
+    .gap-section { background: #f0f9ff; border: 2px solid #0f3460; border-radius: 8px; padding: 16px; margin-bottom: 28px; page-break-inside: avoid; }
+    .gap-section h3 { color: #0f3460; font-size: 14px; margin-bottom: 8px; }
+    .gap-section p { font-size: 13px; margin-bottom: 6px; }
+    .recap { background: #f8f9fa; border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin-top: 20px; }
+    .recap h3 { color: #0f3460; margin-bottom: 10px; font-size: 15px; }
+    .recap table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+    .recap th { background: #0f3460; color: #fff; padding: 8px; text-align: left; }
+    .recap td { padding: 8px; border-bottom: 1px solid #eee; }
+    .recap tr:nth-child(even) { background: #f0f4f8; }
+    .dont-say { background: #fff5f5; border-left: 4px solid #e94560; padding: 10px 14px; font-size: 12.5px; margin-bottom: 20px; border-radius: 0 6px 6px 0; }
+    .dont-say strong { color: #e94560; }
+    .dont-say ul { margin-left: 16px; margin-top: 6px; }
+    @media print {
+      body { padding: 20px; font-size: 12px; }
+      .question-block { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Entretien Sopra Steria - SOC Analyst</h1>
+<div class="subtitle">26 fevrier 2026 a 14h00 | 6 Questions RH Insider | Maxime LAUNOY</div>
+
+<div class="dont-say">
+  <strong>A NE JAMAIS DIRE :</strong>
+  <ul>
+    <li>"J'ai toujours ete passionne par la cybersecurite depuis tout petit"</li>
+    <li>"Je gere un SIEM au quotidien" / "J'analyse des alertes tous les jours"</li>
+    <li>"Je suis expert en..." quoi que ce soit en SOC</li>
+    <li>"Mon poste chez Harvest c'etait nul/ennuyeux" (dire "plus statique" ou "oriente conformite")</li>
+    <li>"C'est bien paye la cyber"</li>
+    <li>"Mes collegues du SOC m'ont dit que..."</li>
+    <li>Ne pas mentionner le prix des outils IA (100$/mois)</li>
+  </ul>
+</div>
+
+<div class="gap-section">
+  <h3>Si on te demande la pause depuis sept 2024 :</h3>
+  <p><strong>Version courte :</strong> "Apres mon alternance en septembre 2024, j'ai pris du recul pour definir mon orientation. J'ai travaille sur des projets personnels, notamment autour de la crypto et de la blockchain, et j'ai approfondi mes competences techniques en securite. Depuis la rentree 2025, je me suis focalise sur la recherche d'un poste en SOC parce que c'est le cote investigation et analyse qui m'interesse."</p>
+  <p><strong>Si insistance :</strong> "J'ai fait du trading crypto ce qui m'a amene a faire de la tracabilite de wallets, j'ai monte un homelab pour pratiquer, et j'ai pris le temps de cibler precisement le type de poste que je voulais. Je ne voulais pas accepter n'importe quoi juste pour travailler."</p>
+</div>
+
+<!-- Q1 -->
+<div class="question-block">
+  <div class="q-header"><span class="num">Q1</span> Qu'avez-vous appris par vous-meme lors de vos differentes missions, sans que cela soit demande par votre management ?</div>
+  <div class="q-body">
+    <div class="bullets">
+      <strong>De quoi je parle :</strong>
+      <ul>
+        <li>Sondes PRTG a installer sur 100+ VM a la main &rarr; j'ai appris Ansible tout seul pour automatiser</li>
+        <li>PowerShell + API PRTG pour deployer les sondes</li>
+        <li>J'ai monte un env de test en local avant (serveur PRTG test + VM test) &rarr; prudence</li>
+        <li>Solution retenue et utilisee en prod</li>
+        <li>SIEM : j'ai demande a la SSI d'avoir acces par curiosite, ils m'ont forme</li>
+        <li>Alertes non complexes traitees &rarr; ca m'a donne envie du SOC</li>
+      </ul>
+    </div>
+    <div class="answer">Ce que j'ai le plus appris par moi-meme, c'est a prendre des initiatives quand une tache peut etre optimisee.
+
+Exemple concret : on m'a demande d'installer manuellement des sondes PRTG sur des machines virtuelles hors couverture de monitoring. C'etait une tache repetitive sur plus de 100 VM. Plutot que de le faire a la main, j'ai pris le temps d'apprendre Ansible par moi-meme pour automatiser le deploiement. J'ai scripte en PowerShell via l'API de PRTG pour deposer les sondes, et utilise Ansible pour modifier les configurations sur chaque machine au prealable.
+
+Et surtout, comme je debutais sur ces outils, j'ai eu le reflexe de monter un environnement de test en local : un serveur PRTG de test, des VM de test, pour valider ma solution avant de la proposer. La solution a ete retenue et utilisee en production.
+
+L'autre chose que j'ai apprise par curiosite, c'est la prise en main du SIEM. Mon poste etait oriente securite operationnelle : hardening, conformite ISO 27001, veille, patch management. Mais on travaillait en proximite avec la SSI qui gerait le SIEM. J'ai demande a avoir acces, ils nous ont formes et laisse traiter des alertes non complexes. C'est cette curiosite pour le cote investigation qui m'a donne envie d'en faire mon metier.</div>
+    <div class="tips"><strong>Conseil :</strong> Commence par Ansible/PRTG (le plus fort). SIEM en deuxieme couche, plus court. Dis "repetitif" jamais "chiant".</div>
+    <div class="keypoints">
+      <span class="kp">Ansible + PRTG + API sur 100+ VM</span>
+      <span class="kp">Env de test en local = rigueur</span>
+      <span class="kp">Solution retenue en production</span>
+      <span class="kp">SIEM par curiosite = transition SOC</span>
+    </div>
+  </div>
+</div>
+
+<!-- Q2 -->
+<div class="question-block">
+  <div class="q-header"><span class="num">Q2</span> Si on vous avait donne carte blanche, quel est le premier point que vous auriez ameliore dans votre derniere mission ?</div>
+  <div class="q-body">
+    <div class="bullets">
+      <strong>De quoi je parle :</strong>
+      <ul>
+        <li>Veille vulne : chaque semaine, eplucher les bulletins CERT manuellement</li>
+        <li>Pour chaque CVE : verifier si ca concerne nos outils, comparer les versions</li>
+        <li>Creer les fiches Jira une par une, rapport hebdo au COMEX + comite secu</li>
+        <li>J'aurais voulu : systeme qui croise auto bulletins CERT x inventaire assets/versions</li>
+        <li>Detection auto de ce qui nous concerne, pre-generation des fiches</li>
+        <li>Avec l'IA c'est faisable maintenant &rarr; l'analyste se concentre sur l'analyse, pas la collecte</li>
+      </ul>
+    </div>
+    <div class="answer">Si j'avais eu carte blanche, j'aurais automatise le processus de veille vulnerabilites.
+
+Chaque semaine, je devais passer plusieurs heures a eplucher manuellement les bulletins du CERT, verifier pour chaque CVE si elle concernait un outil de notre parc, comparer les versions pour savoir si on etait impacte, puis creer les fiches Jira une par une. Tout ca alimentait un rapport hebdomadaire presente au COMEX et au comite de securite.
+
+Ce que j'aurais aime construire, c'est un systeme qui croise automatiquement les bulletins CERT avec notre inventaire d'assets et de versions. A chaque nouvelle publication, il detecte ce qui nous concerne, flag les versions impactees, et pre-genere les fiches. Le rapport serait alimente automatiquement avec les donnees complementaires comme l'etat des sauvegardes.
+
+Aujourd'hui avec l'IA et les outils disponibles, c'est tout a fait faisable. C'est le genre de tache repetitive a forte valeur ajoutee qui merite d'etre automatisee pour que l'analyste se concentre sur l'analyse et la remediation plutot que sur la collecte.</div>
+    <div class="tips"><strong>Conseil :</strong> Dis "chronophage" jamais "relou". Insiste que tu aurais VOULU le faire mais le temps manquait = frustration constructive.</div>
+    <div class="keypoints">
+      <span class="kp">Veille CERT manuelle = pain point concret</span>
+      <span class="kp">Chaine : CERT &rarr; CVE &rarr; Jira &rarr; COMEX</span>
+      <span class="kp">Solution realiste proposee</span>
+      <span class="kp">Mindset d'optimisation</span>
+    </div>
+  </div>
+</div>
+
+<!-- Q3 -->
+<div class="question-block">
+  <div class="q-header"><span class="num">Q3</span> Pourquoi avez-vous choisi la cybersecurite ? Qu'est-ce qui vous motive ? (challenge sincerite + CTF)</div>
+  <div class="q-body">
+    <div class="bullets">
+      <strong>De quoi je parle :</strong>
+      <ul>
+        <li>Numerique + jeux video depuis petit &rarr; informatique = chemin naturel</li>
+        <li>Declic a l'INSA pendant les cours cyber</li>
+        <li>Ce qui motive : le cote investigation, remonter un fil, escape game / enquete</li>
+        <li>Chez Harvest j'ai touche au SIEM par curiosite &rarr; c'est la que j'ai accroche</li>
+        <li>Role precedent trop oriente conformite, je veux du dynamique</li>
+        <li>IA x cyber : me fascine et m'inquiete (attaques evolvent, fuites de donnees)</li>
+        <li>CTF : honnete, pas un acharne, j'en fais quand le theme accroche (ex: Resident Evil)</li>
+        <li>Si challenge CTF &rarr; "je trace des wallets sur Solscan/Etherscan = OSINT blockchain"</li>
+      </ul>
+    </div>
+    <div class="answer">J'ai grandi dans le numerique et les jeux video, donc l'informatique c'etait le chemin naturel. C'est a l'INSA pendant les cours de cybersecurite que le declic s'est fait.
+
+Ce qui me motive, c'est plusieurs choses. D'abord le cote investigation. Quand j'ai pu toucher au SIEM chez Harvest par curiosite, j'ai retrouve ce que j'aime : comprendre ce qui s'est passe, remonter un fil, c'est comme un escape game ou une enquete. C'est stimulant intellectuellement. Et c'est justement ce que je ne retrouvais pas assez dans mon role precedent qui etait plus oriente conformite.
+
+Ensuite, c'est un domaine qui ne stagne jamais. L'intersection avec l'IA par exemple me fascine autant qu'elle m'inquiete. On voit que les attaques evoluent, que les fuites de donnees deviennent regulieres, et je trouve qu'il y a un vrai sens a proteger les gens dans ce contexte.
+
+Pour etre honnete, je ne suis pas un acharne de CTF. J'en fais quand le theme m'accroche, par exemple un CTF sur le theme Resident Evil, c'est fun. Mais ce qui me drive au quotidien c'est plus le cote defense et utilite concrete que le cote competition.</div>
+    <div class="tips"><strong>Conseil :</strong> Ne surjoue PAS la passion. L'honnetete CTF est ta meilleure arme.<br><strong>Si challenge CTF :</strong> "Mon cote investigation, je le pratique autrement : en crypto je trace des wallets sur Solscan et Etherscan, c'est de l'OSINT blockchain. Et chez Harvest j'ai demande a acceder au SIEM par curiosite." = moment de glisser l'OSINT.</div>
+    <div class="keypoints">
+      <span class="kp">Jeux video &rarr; INSA &rarr; declic</span>
+      <span class="kp">Investigation = escape game</span>
+      <span class="kp">IA x cyber = fascination</span>
+      <span class="kp">CTF assume, pas acharne</span>
+      <span class="kp">Si challenge &rarr; OSINT blockchain</span>
+    </div>
+  </div>
+</div>
+
+<!-- Q4 -->
+<div class="question-block">
+  <div class="q-header"><span class="num">Q4</span> Question technique : lecture de logs, decrire ce qui se passe et quels pivots vous feriez</div>
+  <div class="q-body">
+    <div class="bullets">
+      <strong>De quoi je parle :</strong>
+      <ul>
+        <li>1. OBSERVER 5 sec : source du log, timestamp, IP/user, action, resultat</li>
+        <li>2. DECRIRE en 1 phrase : "je vois X evenements de type Y depuis [source]..."</li>
+        <li>3. PIVOTER : "je pivoterais sur [IP/user/hash] pour chercher..."</li>
+        <li>5 codes : 4624=login OK, 4625=echec, 4672=admin, 7045=service, 1102=logs effaces</li>
+        <li>Pivots : IP &rarr; reputa VT/AbuseIPDB | User &rarr; autres actions | Process &rarr; parent/LOLBins | Hash &rarr; VT</li>
+        <li>Vocabulaire a placer : IOC, pivoter, chaine d'execution, mouvement lateral, C2, TTPs, triage</li>
+        <li>Si je connais pas un code : "je vois dans le message que..." + "je verifierais dans la doc"</li>
+        <li><strong>Cas 1 Brute Force :</strong> 4x 4625 + 1x 4624 meme IP = brute force reussi &rarr; pivot IP, hostname, threat intel</li>
+        <li><strong>Cas 2 SQL Injection :</strong> GET avec OR 1=1 puis UNION SELECT, tailles reponses croissantes = injection qui marche &rarr; bloquer IP, contacter equipe app, WAF</li>
+        <li><strong>Cas 3 Sysmon/C2 :</strong> cmd &rarr; powershell -enc (base64) + connexion sortante IP externe = C2 &rarr; decoder base64, reputation IP, remonter parent process</li>
+      </ul>
+    </div>
+    <div class="answer"><strong>METHODO EN 3 ETAPES :</strong>
+
+1. OBSERVER (5 sec) : Source du log ? Timestamp ? Acteurs (IP, user) ? Action ? Resultat ?
+2. DECRIRE : "Je vois X evenements de type Y, depuis [source] vers [dest], entre [heure] et [heure]."
+3. PIVOTER : "Pour confirmer, je pivoterais sur [element] pour chercher [quoi]."
+
+<strong>5 EVENT CODES A CONNAITRE :</strong>
+  4624 = Login OK | 4625 = Login ECHOUE | 4672 = Droits admin | 7045 = Service installe | 1102 = Logs effaces
+
+<strong>PIVOTS CLASSIQUES :</strong>
+  IP suspecte &rarr; autres connexions, geoloc, reputation (VirusTotal, AbuseIPDB)
+  User compromis &rarr; autres actions, horaires inhabituels
+  Process suspect &rarr; chaine d'execution, parent process, LOLBins
+  Hash de fichier &rarr; reputation VT, autres machines avec ce hash
+
+<strong>VOCABULAIRE A PLACER :</strong> IOC, pivoter, chaine d'execution, mouvement lateral, C2, LOLBins, TTPs, triage
+
+<strong>========== CAS CONCRET 1 : BRUTE FORCE ==========</strong>
+
+  EventCode=4625 Account_Name=j.martin Src_IP=185.220.101.34 (x4)
+  EventCode=4624 Account_Name=j.martin Src_IP=185.220.101.34
+
+Tu dis : "Je vois 4 evenements 4625, des echecs d'authentification, sur le compte j.martin, suivis d'un 4624, un login reussi, le tout depuis la meme IP externe en quelques secondes. C'est un brute force reussi.
+Pivots : 1) IP source &rarr; a-t-elle cible d'autres comptes ? 2) Hostname cible &rarr; que s'est-il passe apres le login ? 3) Threat intel &rarr; verifier cette IP sur VirusTotal ou AbuseIPDB."
+
+<strong>========== CAS CONCRET 2 : SQL INJECTION ==========</strong>
+
+  185.43.12.8 "GET /search?q=test' OR 1=1--" 200 4532
+  185.43.12.8 "GET /search?q=test' UNION SELECT username,password FROM users--" 200 8921
+  185.43.12.8 "GET /search?q=test' UNION SELECT credit_card,cvv FROM payments--" 200 12340
+
+Tu dis : "Je vois des requetes GET depuis la meme IP avec des payloads SQL injection. OR 1=1 c'est un test classique, puis UNION SELECT pour exfiltrer users puis payments. Les tailles de reponse croissantes (4K, 8K, 12K) suggerent que l'injection fonctionne.
+Pivots : verifier tous les endpoints cibles par cette IP, contacter l'equipe applicative, bloquer au WAF, verifier si data breach potentiel."
+
+Splunk : index=web src_ip="185.43.12.8" | where like(uri_query, "%UNION%") OR like(uri_query, "%OR 1=1%")
+
+<strong>========== CAS CONCRET 3 : EXECUTION SUSPECTE (Sysmon/C2) ==========</strong>
+
+  EventCode=1 ParentImage="cmd.exe" Image="powershell.exe"
+  CommandLine="powershell -enc aQBlAHgAIAAoAG4AZQB3AC0A..." User="CORP\j.dupont"
+  EventCode=3 Image="powershell.exe" DestIP=91.234.56.78 DestPort=443
+
+Tu dis : "cmd.exe lance PowerShell avec un argument encode en base64 (-enc). C'est un indicateur classique d'execution malveillante. Juste apres, ce PowerShell etablit une connexion sortante vers une IP externe port 443 : ca ressemble a du C2.
+Pivots : decoder le base64, verifier la reputation de l'IP, pivoter sur le user j.dupont (phishing ?), remonter le parent process de cmd.exe, chercher si d'autres machines contactent cette IP."
+
+Splunk : index=windows sourcetype=sysmon EventCode=1 CommandLine="*powershell*-enc*"</div>
+    <div class="tips"><strong>Conseil :</strong> Prends 5 secondes avant de parler. Le PIVOT est plus important que la lecture initiale. Propose toujours au moins 3 pivots. Si tu ne reconnais pas un code, dis "je vois dans le message qu'il s'agit de..." et montre ta methodo.</div>
+    <div class="keypoints">
+      <span class="kp">Observer &rarr; Decrire &rarr; Pivoter</span>
+      <span class="kp">Minimum 3 pivots concrets</span>
+      <span class="kp">5 EventCodes par coeur</span>
+      <span class="kp">Pas grave si tu connais pas, montre la methodo</span>
+    </div>
+  </div>
+</div>
+
+<!-- Q5 -->
+<div class="question-block">
+  <div class="q-header"><span class="num">Q5</span> Quel est votre point de vue sur l'IA et l'utilisez-vous aujourd'hui ? Si oui, pourquoi ?</div>
+  <div class="q-body">
+    <div class="bullets">
+      <strong>De quoi je parle :</strong>
+      <ul>
+        <li>Tres favorable, utilisation quotidienne, c'est un AMPLIFICATEUR (pas un remplacement)</li>
+        <li>Precautions : jamais de donnees confidentielles, modeles locaux si besoin</li>
+        <li>Outils : Claude Code au quotidien + veille sur les nouveaux modeles</li>
+        <li>Projet 1 : SaaS trouverunprof.com (auth multi-roles, calendrier, paiement CB, notifs)</li>
+        <li>Projet 2 : outil recherche emploi en local (scraping, analyse compatibilite, CV adaptes, suivi)</li>
+        <li>Case study dispo si ca interesse</li>
+        <li>Lien cyber : IA x securite, attaques massifiees cote attaquant, detection patterns cote defenseur</li>
+      </ul>
+    </div>
+    <div class="answer">Je suis tres favorable a l'IA et je l'utilise au quotidien. Pour moi c'est un amplificateur : gain de temps, gain de creativite, et surtout un accelerateur d'apprentissage. Evidemment avec des precautions, notamment en contexte professionnel, ne jamais y injecter de donnees confidentielles, privilegier des modeles locaux quand c'est necessaire. Le facteur humain reste central, l'IA assiste mais ne remplace pas.
+
+Concretement, j'utilise des outils comme Claude Code au quotidien et je fais beaucoup de veille sur les nouveaux modeles et les nouvelles pratiques pour en tirer le maximum.
+
+Exemples concrets de projets realises :
+
+1) SaaS complet : trouverunprof.com, plateforme de mise en relation professeurs/etudiants. Authentification multi-roles, calendrier, paiement par CB avec credits, notifications. Construit de A a Z, en securisant donnees et transactions.
+
+2) Outil d'automatisation de recherche d'emploi en local : scraping d'offres, analyse de compatibilite, generation de CV adaptes (angle d'approche, pas contenu), tableau de suivi. Case study documente disponible.
+
+Pour le lien cyber : l'intersection IA et cyber me passionne. Cote attaquant, l'IA va permettre des attaques massifiees. Cote defenseur, il faudra utiliser l'IA pour detecter les patterns et anticiper. C'est un sujet sur lequel je compte me former activement.</div>
+    <div class="tips"><strong>Conseil :</strong> Ne cite PAS le prix (100$/mois). Dis "j'investis dans des outils professionnels". Le mot "amplificateur" = tu restes maitre. Propose le case study naturellement sans forcer.</div>
+    <div class="keypoints">
+      <span class="kp">Amplificateur, pas remplacement</span>
+      <span class="kp">Precaution donnees confidentielles = reflexe secu</span>
+      <span class="kp">SaaS trouverunprof.com = livre</span>
+      <span class="kp">Outil emploi = mindset automatisation</span>
+      <span class="kp">Vision IA x cyber</span>
+    </div>
+  </div>
+</div>
+
+<!-- Q6 -->
+<div class="question-block">
+  <div class="q-header"><span class="num">Q6</span> Avez-vous des hobbies ou activites personnelles qui vous servent dans votre travail ?</div>
+  <div class="q-body">
+    <div class="bullets">
+      <strong>De quoi je parle :</strong>
+      <ul>
+        <li>Builder : je vais voir mes proches, "quel probleme tu veux automatiser ?", et je le construis</li>
+        <li>Exemple : trouverunprof.com pour ma fiancee (plateforme prenait trop de frais)</li>
+        <li>Blockchain + DeFi : terrain d'entrainement secu en conditions reelles</li>
+        <li>Attaques permanentes : drains, phishing, faux smart contracts &rarr; argent en jeu directement</li>
+        <li>Cold wallet physique : cles privees hors ligne, separation wallets, verif chaque transaction</li>
+        <li>Tracer des wallets sur Solscan/Etherscan, suivre flux de transactions</li>
+        <li>Correlation comptes Twitter / adresses crypto = OSINT blockchain</li>
+        <li>Meme etat d'esprit que SOC : vigilance, analyser, pivoter, remonter une piste</li>
+        <li>Musculation : clarte mentale pour le travail d'analyse</li>
+      </ul>
+    </div>
+    <div class="answer">Mon principal hobby c'est de construire des solutions concretes pour resoudre des problemes autour de moi. Je vais voir mes proches, je leur demande quel probleme ils aimeraient automatiser, et je le construis. C'est comme ca qu'est ne trouverunprof.com pour ma fiancee.
+
+L'autre activite qui me sert enormement, c'est la blockchain et la DeFi. Je suis tres actif dans cet ecosysteme et honnetement, c'est un terrain d'entrainement a la securite en conditions reelles. En DeFi, les tentatives d'attaque sont permanentes : drains de wallets, phishing cible, faux smart contracts. Les gens attaquent pour acceder directement a ton argent, donc l'enjeu est immediat.
+
+D'ailleurs je stocke mes cryptos sur des cold wallets physiques. Cles privees hors ligne, separation des wallets, verification de chaque transaction. C'est de l'hygiene de securite appliquee a mes propres finances.
+
+Concretement ca m'amene a tracer des wallets sur Solscan et Etherscan, suivre des flux de transactions, et parfois faire de la correlation entre des comptes Twitter et des adresses crypto. C'est de l'OSINT applique a la blockchain.
+
+L'etat d'esprit c'est exactement le meme qu'en SOC : etre vigilant en permanence, analyser ce qu'on voit, pivoter d'un element a l'autre pour remonter une piste. Sauf qu'en DeFi, c'est mon propre argent qui est en jeu.
+
+Sinon cote physique, la musculation regulierement, ca aide a garder la clarte mentale pour un travail d'analyse.</div>
+    <div class="tips"><strong>Conseil :</strong> C'est ta reponse la plus puissante. N'oublie JAMAIS la crypto.<br><strong>Si le recruteur rebondit sur l'OSINT :</strong> "En DeFi on fait de l'OSINT en permanence sans forcement le nommer. Tracer un wallet, correler une adresse avec une identite, analyser un smart contract suspect, c'est le meme reflexe que d'enrichir un IOC en SOC. Les outils sont differents mais la demarche d'investigation est identique." Laisse-le parler apres, il va partager son interet.</div>
+    <div class="keypoints">
+      <span class="kp">Builder = proactif</span>
+      <span class="kp">DeFi = securite en conditions reelles</span>
+      <span class="kp">Cold wallet = hygiene secu</span>
+      <span class="kp">Solscan/Etherscan = OSINT blockchain</span>
+      <span class="kp">Correlation Twitter/wallet = OSINT</span>
+      <span class="kp">"Mon propre argent" = sincerite</span>
+    </div>
+  </div>
+</div>
+
+<!-- RECAP -->
+<div class="recap">
+  <h3>Recap : Fil rouge de toutes tes reponses</h3>
+  <table>
+    <tr><th>Question</th><th>Ton angle fort</th><th>Piege a eviter</th></tr>
+    <tr><td>Q1 Appris seul</td><td>Ansible + PRTG + env de test</td><td>Ne pas trop detailler, reste concis</td></tr>
+    <tr><td>Q2 Carte blanche</td><td>Automatisation veille CERT/CVE</td><td>Dis "chronophage" pas "relou"</td></tr>
+    <tr><td>Q3 Pourquoi cyber</td><td>Investigation = escape game + honnetete CTF</td><td>Ne surjoue pas la passion</td></tr>
+    <tr><td>Q4 Lecture logs</td><td>Methodo : observer, decrire, pivoter</td><td>Prends 5 sec avant de parler</td></tr>
+    <tr><td>Q5 IA</td><td>Projets concrets (SaaS, outil emploi)</td><td>Ne cite pas le prix, dis "outils pro"</td></tr>
+    <tr><td>Q6 Hobbies</td><td>Builder + crypto/OSINT blockchain + cold wallet</td><td>N'oublie pas la crypto !</td></tr>
+  </table>
+  <p style="margin-top: 12px; font-size: 13px; color: #0f3460; font-weight: 600;">Ton fil rouge : tu prends des initiatives, tu automatises, tu investigues par curiosite. C'est exactement le profil SOC.</p>
+</div>
+
+</body>
+</html>
